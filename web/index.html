@@ -1,0 +1,234 @@
+<!-- 
+    Developed and designed by: LAURENZ TOLENTINO
+    COLLEGE OF COMPUTER STUDIES
+    COMPUTER SCIENCE - SOFTWARE TECHNOLOGY
+    laurenztino@outlook.com
+
+    It's not nice when you view this thing just to copy and paste it without permission.
+    
+-->
+<!doctype html>
+<html>
+    <head>
+        <title>QMMC</title>
+        <!--Import materialize.css-->
+        <link type="text/css" rel="stylesheet" href="css/animate.min.css">
+        <link type="text/css" rel="stylesheet" href="css/materialize.css"  media="screen,projection"/>	      
+        <link type="text/css" rel="stylesheet" href="css/styles.css"/>
+        <link type="text/css" rel="stylesheet" href="css/animation.css">
+        
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes"/>
+        <style> [data-sr] { visibility: hidden; } </style>
+    </head>
+    <!-- Start of Body -->
+    <body>        
+        <!-- Start Here -->
+        <!-- nav bar -->
+        <div id="start-navbar">
+            <h5 class="roboto-300 text-left white-text" style="margin-left: 5%;">
+                Q M M C - O R M S
+            </h5>            
+        </div>                
+        <!-- below nav bar -->
+        <div id="sec-1" class="windowheight waves-effect waves-light" style="display: block;">
+            <div class="container " >
+                <div class="row">
+                    <!-- Description -->
+                    <div class="col s12 m6">
+                        <!-- data-sr="reset enter bottom move 40px" -->
+                        <h2  class="roboto-200 text-left " style="color:white;" data-sr="reset enter left move 40px">
+                            Providing the right information for medical teams to respond during outbreaks.
+                        </h2>
+                    </div>
+                    <!-- Log In  -->
+                    <div class="col s12 m6">
+                        <div class="pushdown-5p"></div>                    
+                        <div class="row">
+                            <div class="col s12">
+                                <div class="card white">
+                                    <div class="card-content white ">
+                                        <form action="UserAuthenticationServlet" method="POST">
+                                            <!-- form start -->
+                                            <span class="card-title grey-text text-darken-4">Log-In to your QMMC-ORMS</span>
+                                            <!-- username -->
+                                            <div class="input-field">
+                                                <i class="mdi-action-account-circle prefix"></i>
+                                                <input id="username" type="text" class="validate" name="username">
+                                                <label for="username" class="">Username</label>                 
+                                            </div>
+                                            <!-- password -->
+                                            <div class="input-field">
+                                                <i class="mdi-action-lock prefix"></i>
+                                                <input id="password" type="password" class="validate" name="password">
+                                                <label for="password" class="">Password</label>       
+                                            </div>
+                                            <center>
+                                                <!-- submit button -->
+                                                <button href="/admissions.html" class="btn tooltipped  waves-effect waves-light" type="submit" name="action"
+                                                        data-tooltip="This button sends you to the Nurse Dashboard page" data-position="top" data-delay="20">
+                                                    Log-in
+                                                    <i class="mdi-content-send left"></i>
+                                                </button>
+
+                                            </center>
+                                            <!-- form end -->
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                
+                    </div>
+                </div>
+                <div id="learn-more" class="hide-on-small-only">
+                    <h5 class="teal-text center roboto-200">
+                        Scroll down to learn more
+                    </h5>
+                </div>
+            </div>
+        </div>
+        
+        <!-- below the fold -->
+        <div id="sec-2" class="windowheight blue-grey darken-4">                        
+            <div class="container">
+                <div class="row">
+                    <div class="valign-wrapper ">
+                        <div class="col s12 m8">
+                            <h2 class="roboto-400 valign" style="color:white;" data-sr="reset enter left move 40px">
+                                The right technology for all types of screens.
+                            </h2>
+                            <h5 class="roboto-200 white-text valign" data-sr="reset enter bottom move 40px">
+                                Using the latest web technologies, QMMC-ORMS was built to be 
+                                used on both desktop and mobile browsers.
+                                No need to install apps as it was built on technologies
+                                existing on all modern browsers.
+                            </h5>
+                        </div>
+                        <div class="col s12 m4  hide-on-small-only" data-sr="reset enter right">
+                            <div class="row">
+                                <img src="assets/images/QMMRC%20iPhone.png" class="img-big-hero">
+                            </div>                                                    
+                        </div>
+                    </div> 
+                    <div class="hide-on-med-and-up">                        
+                        <div class="col s1">.</div>
+                        <div class="col s10">
+                            <img src="assets/images/mac-gold.png" class="img-big-hero">
+                        </div> 
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div id="sec-3" class="windowheight grey lighten-5">
+            <div class="container">
+                <div class="row">
+                    <div class="valign-wrapper">
+                        <div class="col s12 m8">
+                            <h1 class="roboto-400 valign teal-text text-darken-4" data-sr="reset enter right move 40px">
+                                Trusted by professionals
+                            </h1>
+                            <h5 class="roboto-200 valign" data-sr="reset enter bottom move 40px">
+                                Professionals such as students and unknown individuals
+                                drinking coffee late at night and early in the morning.
+                                That's how this page was taken seriously. And oh, 
+                                I lifted that image on the right from another website (it's not a free image).
+                            </h5>
+                        </div>
+                        <div class="col s12 m4  hide-on-small-only" data-sr="reset enter right">
+                            <div class="row">
+                                <img src="assets/images/doctor-flat.png" class="img-big-hero">
+                            </div>                                                    
+                        </div>
+                    </div>
+                    <div class="hide-on-med-and-up">                        
+                        <div class="col s1">.</div>
+                        <div class="col s10">
+                            <img src="assets/images/doctor-flat.png" class="img-big-hero">
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="sec-4" class="windowheight">
+            <div class="container">
+                <div class="row center">
+                    <div class="center">
+                        <h1 class="roboto-300 teal-text" data-sr="reset enter bottom 100px">
+                            Get started now.
+                        </h1>
+                        <h4 class="roboto-200 white-text" data-sr="reset enter top 100px">
+                            Available for a low low price of <br>
+                            <b>P9999.00</b> <br>
+                            and get all the information you need <br>
+                            when you need it for who knows what. <br>
+                            
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        </div>        
+        <!-- 
+        Start of Below the fold content
+        -->
+        <!-- Start of Footer content -->
+        <footer class="page-footer blue-grey darken-2">
+          <div class="container">
+            <div class="row">
+              <div class="col l6 s12">
+                <h5 class="white-text">Test User Interface</h5>
+                <p class="grey-text text-lighten-4">
+                    Will not look like the final product.
+                    Use the shortcuts on the right to view the specific page you are looking for. 
+                    More links will come soon (hopefully).
+                  </p>
+              </div>
+              <div class="col l4 offset-l2 s12">
+                <h5 class="white-text">Links</h5>
+                <ul>
+                  <li><a class="grey-text text-lighten-3" href="nurse-board2.html">Nurse Dashboard</a></li>
+                  <li><a class="grey-text text-lighten-3" href="admissions.jsp">Submit Admission Information</a></li>                                    
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="footer-copyright">
+            <div class="container">
+            © 2015 LT
+            <a class="grey-text text-lighten-4 right" href="http://www.laurenz.co">Developer Home Page</a>
+            </div>
+          </div>
+        </footer>
+        <!-- Do Not Go Beyond Here -->
+        <script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
+      	<script type="text/javascript" src="js/materialize.min.js"></script>
+      	<script src='js/scrollReveal.min.js'></script>
+        <script src="js/laurenz.js"></script>
+        <script type="text/javascript">
+      		$(document).ready(function(){
+    			$(".button-collapse").sideNav();
+      		});
+            
+            var options = [
+                {selector: '#sec-2', offset: 200, callback: 'changeNavbarToDark()' },
+                {selector: '#sec-3', offset: 200, callback: 'changeNavbarToWhite()' },
+            ];
+            //Materialize.scrollFire(options);
+            
+            function changeNavbarToDark()
+            {
+                var nav = document.getElementById('start-navbar');
+                //nav.style.background = 'black';
+                nav.className = 'blue-grey darken-4';
+            }
+            function changeNavbarToWhite()
+            {
+                var nav = document.getElementById('start-navbar');                
+                nav.className = 'grey lighten-5';
+            }
+      	</script>        
+        <script>
+          window.sr = new scrollReveal();
+        </script>                                
+    </body>
+</html>
