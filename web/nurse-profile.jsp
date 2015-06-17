@@ -1,3 +1,8 @@
+<%@page import="MODEL.PatientModel"%>
+<%@page import="DAO.PatientDAO"%>
+<%@page import="MODEL.AdmittanceModel"%>
+<%@page import="java.util.LinkedList"%>
+<%@page import="DAO.AdmittanceDAO"%>
 <!doctype html>
 <html>
     <head>
@@ -50,7 +55,7 @@
             <div class="card">                
                 <div class="card-content">
                     <h5 class="center"> 
-                        Amanda Zesto
+                        Nurse Supreme
                     </h5><br>
                     <div class="row center">
                         <div class="col s12 m4">
@@ -86,14 +91,12 @@
                 <div class="card-content">
                     <ul class="collection">
                         <%
-                            for(int ctr=0; ctr<3; ctr++){
-                                
-                            }
+                            PatientDAO dao = new PatientDAO();
+                            LinkedList<PatientModel> list = dao.getPatients();
+                            for(int ctr=0; ctr<list.size(); ctr++){  
                         %>
-                        <a href="#!" class="collection-item">Juan dela Cruz</a>
-                        <a href="#!" class="collection-item">Maria dela Cruz</a>
-                        <a href="#!" class="collection-item">Alphonso dela Cruz</a>
-                        <a href="#!" class="collection-item">Baka dela Cruz</a>
+                        <a href="patient-profile.jsp" class="collection-item"><% out.println(list.get(ctr).getPatientLastName()+", "+list.get(ctr).getPatientFirstName()); %></a>
+                        <%}%>
                     </ul>
                 </div>
             </div>
