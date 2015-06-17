@@ -1,0 +1,45 @@
+
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/core-icon-button/core-icon-button.html">
+    
+
+    
+<polymer-element name="warn-orange">
+    <template>
+        <link type="text/css" rel="stylesheet" href="css/materialize.css"  media="screen,projection"/>        
+        <style>
+            
+            polyfill-next-selector { content: 'h6'; }
+            ::content h6 {
+                font-size: 1em;
+                font-weight: 300;
+                line-height: 1em;
+            } 
+            polyfill-next-selector { content: 'p'; }
+            .shortenme {
+                height: 100px;
+            }
+            
+        </style>
+
+        
+        <div class="card grey lighten lighten-5">
+            <div class="card-content shortenme">
+                <span class="card-title black-text">
+                    <content select='h6'></content>
+                </span>                                                
+            </div>
+            <div class="card-content orange lighten-1 white-text">
+                Has reached warning levels. 
+                <br><br>
+                <content></content>
+            </div>
+        </div>
+        
+    
+    </template>
+    <script>
+        Polymer({});
+    </script>
+    
+</polymer-element>

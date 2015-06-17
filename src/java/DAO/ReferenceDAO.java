@@ -39,12 +39,12 @@ public class ReferenceDAO {
                 model = new ReferenceModel();
                 model.setReferenceID(rs.getInt("barangayID"));
                 model.setReferenceName(rs.getString("barangayName"));
-                model.setContactNumber(rs.getInt("barangayContact"));
+                model.setContactNumber(rs.getLong("barangayContact"));
                 list.add(model);
             }
             con.close();
         }catch(SQLException e){
-            
+            e.printStackTrace();
         }
         return list;
     }
@@ -66,7 +66,7 @@ public class ReferenceDAO {
                 model = new ReferenceModel();
                 model.setReferenceID(rs.getInt("hospitalID"));
                 model.setReferenceName(rs.getString("hospitalName"));
-                model.setContactNumber(rs.getInt("hospitalContact"));
+                model.setContactNumber(rs.getLong("hospitalContact"));
                 list.add(model);
             }
             con.close();
@@ -113,7 +113,7 @@ public class ReferenceDAO {
             }
             con.close();
         }catch(SQLException e){
-            
+            e.printStackTrace();
         }
         return list;
     }

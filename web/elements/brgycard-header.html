@@ -1,0 +1,32 @@
+
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/core-icon-button/core-icon-button.html">        
+
+<polymer-element name="brgycard-header">
+    <template>
+        
+        <link type="text/css" rel="stylesheet" href="css/materialize.css"  media="screen,projection"/>        
+        
+        <style>
+            polyfill-next-selector { content: 'span'; }
+        </style>
+
+        
+        <!-- barangay card -->        
+        
+        <span class="badge">
+            <content select='span'>
+                
+            </content>
+        </span>
+        
+        <content></content>
+        
+    
+    </template>
+
+    <script>
+        Polymer({});
+    </script>
+    
+</polymer-element>

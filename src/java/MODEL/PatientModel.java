@@ -6,17 +6,18 @@
 
 package MODEL;
 
-/**
- *
- * @author Lester Chong
- */
+import java.util.LinkedList;
+
 public class PatientModel {
     private int patientID;
     private String patientFirstName;
     private String patientLastName;
-    private int patientAge;
+    private String patientAddress;
     private String patientBarangay;
-
+    private long patientPhoneNumber;
+    private String patientWard;
+    private LinkedList<ProcedureModel> procedures;
+    
     /**
      * @return the patientID
      */
@@ -60,20 +61,6 @@ public class PatientModel {
     }
 
     /**
-     * @return the patientAge
-     */
-    public int getPatientAge() {
-        return patientAge;
-    }
-
-    /**
-     * @param patientAge the patientAge to set
-     */
-    public void setPatientAge(int patientAge) {
-        this.patientAge = patientAge;
-    }
-
-    /**
      * @return the patientBarangay
      */
     public String getPatientBarangay() {
@@ -85,5 +72,62 @@ public class PatientModel {
      */
     public void setPatientBarangay(String patientBarangay) {
         this.patientBarangay = patientBarangay;
+    }
+
+    /**
+     * @return the procedures
+     */
+    public LinkedList<ProcedureModel> getProcedures() {
+        return procedures;
+    }
+
+
+    /**
+     * @return the patientAddress
+     */
+    public String getPatientAddress() {
+        return patientAddress;
+    }
+
+    /**
+     * @param patientAddress the patientAddress to set
+     */
+    public void setPatientAddress(String patientAddress) {
+        this.patientAddress = patientAddress;
+    }
+
+    /**
+     * @return the patientPhoneNumber
+     */
+    public long getPatientPhoneNumber() {
+        return patientPhoneNumber;
+    }
+
+    /**
+     * @param patientPhoneNumber the patientPhoneNumber to set
+     */
+    public void setPatientPhoneNumber(long patientPhoneNumber) {
+        this.patientPhoneNumber = patientPhoneNumber;
+    }
+
+    /**
+     * @return the patientWard
+     */
+    public String getPatientWard() {
+        return patientWard;
+    }
+
+    /**
+     * @param patientWard the patientWard to set
+     */
+    public void setPatientWard(String patientWard) {
+        this.patientWard = patientWard;
+    }
+
+    /**
+     * @param procedures the procedures to set
+     */
+    public void setProcedures(LinkedList<ProcedureModel> procedures) {
+        this.procedures = procedures;
     }
 }

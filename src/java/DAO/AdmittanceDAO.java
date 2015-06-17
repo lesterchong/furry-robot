@@ -9,6 +9,7 @@ package DAO;
 import DB.ConcreteConnection;
 import DB.ConnectionFactory;
 import MODEL.AdmittanceModel;
+import MODEL.BarangayModel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -188,4 +189,5 @@ public class AdmittanceDAO {
         }
         return null;
     }
+    
 }

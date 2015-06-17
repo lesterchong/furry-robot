@@ -17,10 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- *
- * @author Lester Chong
- */
+
 public class UserAuthenticationServlet extends HttpServlet {
 
     /**
@@ -51,7 +48,7 @@ public class UserAuthenticationServlet extends HttpServlet {
                 sesh.setAttribute("hospitalID", model.getHospital());
                 sesh.setAttribute("isLogged", true);
                 out.printf("<script>alert(\"Successful Login\")</script>");
-                rd = getServletContext().getRequestDispatcher("/nurse-board2.html");
+                rd = getServletContext().getRequestDispatcher("/nurse-board2.jsp");
                 rd.include(request, response);
                 return;
             }else{

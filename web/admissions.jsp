@@ -34,12 +34,12 @@
                 <a href="#!" class="roboto-300">Q M M C - O R M S</a>
                 <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
                 <ul class="right hide-on-med-and-down">
-                    <li><a href="admissions.html">Admissions</a></li>
-                    <li><a href="nurse-board2.html">Dashboard</a></li>                    
+                    <li><a href="admissions.jsp">Admissions</a></li>
+                    <li><a href="nurse-board2.jsp">Dashboard</a></li>                    
                 </ul>
                 <ul class="side-nav" id="mobile-demo">
-                    <li><a href="admissions.html">Admissions</a></li>
-                    <li><a href="nurse-board2.html">Dashboard</a></li>                    
+                    <li><a href="admissions.jsp">Admissions</a></li>
+                    <li><a href="nurse-board2.jsp">Dashboard</a></li>                    
                 </ul>
             </div>
         </nav>      
@@ -159,7 +159,7 @@
                                         <select id="c_relationship" class="browser-default" name="companionRelationship">
                                             <option value="" disabled selected>Relationship with Patient</option>
                                             <%
-                                                list = dao.getRelationships();
+                                                list = dao.getRelationship();
                                                 for(int ctr=0; ctr<list.size(); ctr++)
                                                     out.println("<option value="+list.get(ctr).getReferenceID()+">"+list.get(ctr).getReferenceName()+"</option>");
                                             %>

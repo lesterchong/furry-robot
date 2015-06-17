@@ -23,6 +23,10 @@
         <servlet-name>AddDischargeServlet</servlet-name>
         <servlet-class>SERVLET.AddDischargeServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SendTextServlet</servlet-name>
+        <servlet-class>SERVLET.SendTextServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AddAdmittanceServlet</servlet-name>
         <url-pattern>/AddAdmittanceServlet</url-pattern>
@@ -42,6 +46,10 @@
     <servlet-mapping>
         <servlet-name>AddDischargeServlet</servlet-name>
         <url-pattern>/AddDischargeServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SendTextServlet</servlet-name>
+        <url-pattern>/SendTextServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

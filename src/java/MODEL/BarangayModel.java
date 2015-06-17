@@ -6,6 +6,8 @@
 
 package MODEL;
 
+import java.util.LinkedList;
+
 /**
  *
  * @author Lester Chong
@@ -15,6 +17,7 @@ public class BarangayModel {
     private String barangayName;
     private int patientCount;
     private long barangayContact;
+    private LinkedList<SMSModel> smsHistory;
 
     /**
      * @return the barangayID
@@ -70,5 +73,19 @@ public class BarangayModel {
      */
     public void setBarangayContact(long barangayContact) {
         this.barangayContact = barangayContact;
+    }
+
+    /**
+     * @return the smsHistory
+     */
+    public LinkedList<SMSModel> getSmsHistory() {
+        return smsHistory;
+    }
+
+    /**
+     * @param smsHistory the smsHistory to set
+     */
+    public void setSmsHistory(LinkedList<SMSModel> smsHistory) {
+        this.smsHistory = smsHistory;
     }
 }

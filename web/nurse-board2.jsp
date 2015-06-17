@@ -1,11 +1,22 @@
 
-<%@page import="java.util.LinkedList"%>
-<%@page import="DAO.AdmittanceDAO"%>
+<%@page import="DAO.BarangayDAO"%>
 <%@page import="MODEL.BarangayModel"%>
+<%@page import="java.util.LinkedList"%>
+
 <!doctype html>
 <html>
     <head>
         <title>QMMC</title>
+        <!-- Polymer -->
+        <script src="components/webcomponentsjs/webcomponents.js"></script>
+        <link rel="import" href="image-card.html"/>
+        <link rel="import" href="warn-orange.html"/>
+        <link rel="import" href="warn-red.html"/>
+        <link rel="import" href="brgycard-header.html"/>
+        <link rel="import" href="brgycard-content.html"/>
+        <link rel="import" href="navi-bar.html">
+        <link rel="import" href="sms-rec.html">
+        <link rel="import" href="sms-rep.html">
         <!--Import materialize.css-->
         <link type="text/css" rel="stylesheet" href="css/animate.min.css">
         <link type="text/css" rel="stylesheet" href="css/materialize.css"  media="screen,projection"/>	      
@@ -20,9 +31,9 @@
     </head>
     <!-- Start of Body -->
     <body class="blue-grey darken-4">
-        <!--JSP Stuff-->
+        <!--Initialize JSP stuff-->
         <%
-            AdmittanceDAO dao = new AdmittanceDAO();
+            BarangayDAO dao = new BarangayDAO();
             LinkedList<BarangayModel> barangayList;
         %>
         <!-- Start Here -->
@@ -34,11 +45,11 @@
                 <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
                 <ul class="right hide-on-med-and-down">
                     <li><a href="admissions.jsp">Admissions</a></li>
-                    <li><a href="nurse-board2.html">Dashboard</a></li>                    
+                    <li><a href="nurse-board2.jsp">Dashboard</a></li>                    
                 </ul>
                 <ul class="side-nav" id="mobile-demo">
                     <li><a href="admissions.jsp">Admissions</a></li>
-                    <li><a href="nurse-board2.html">Dashboard</a></li>                    
+                    <li><a href="nurse-board2.jsp">Dashboard</a></li>                    
                 </ul>
             </div>
         </nav>      
@@ -51,7 +62,74 @@
         <div id="" class="container">
             <div class="row">
                 <!-- Start of week view @weekview-->
-                <div class="col s12 m4">
+                
+                <!-- Start of outbreak monitor thing -->
+                <div class="col s12 m12">                    
+                    <div class="card">                        
+                        <div class="card-content">
+                            <!-- title -->
+                            <span class="card-title black-text">
+                                Outbreak Monitor Protocol
+                            </span>
+                            <!-- body -->
+                            <div>
+                                <ul class="collapsible collection with-header">
+                                    <!-- BARANGAY -->
+                                    <%
+                                        barangayList = dao.getCountPerBarangay();
+                                        for(int ctr = 0; ctr<barangayList.size(); ctr++){
+                                    %>
+                                    <li>
+                                        <!-- barangay card -->
+                                        <div class="collapsible-header">
+                                            <span><% out.print(barangayList.get(ctr).getBarangayName()); %></span>
+                                            <span class="badge"><% out.print(barangayList.get(ctr).getPatientCount()); %></span>                                            
+                                        </div>   
+                                        <div class="collapsible-body grey lighten-3">
+                                            <!-- progress bar thing -->                                            
+                                            <div class="row">
+                                                <p>
+                                                    Contact Number:
+                                                    <% out.print(barangayList.get(ctr).getBarangayContact()); %>
+                                                </p>
+                                            </div>
+                                            <div class="row" style="padding-left: 20px; padding-right: 20px">  
+                                                <div class="col s12">
+                                                    Current messages:
+                                                    <div class="card sms-zone" style="max-height: 400px; overflow-y: auto;">
+                                                        <%
+                                                            for(int ctr2=0; ctr2<barangayList.get(ctr).getSmsHistory().size(); ctr2++){
+                                                                out.println("<sms-rec>"+barangayList.get(ctr).getSmsHistory().get(ctr2).getDateSent()+": "+barangayList.get(ctr).getSmsHistory().get(ctr2).getSMS()+"</sms-rec><br>");
+                                                            }
+                                                        %>
+                                                    </div>
+                                                    <form action="SendTextServlet" method="POST" class="col s12">
+                                                        <div class="row">
+                                                            <div class="input-field col s12">
+                                                                <textarea id="textarea1" class="materialize-textarea" name="textMessage"></textarea>
+                                                                <label for="textarea1">Text Area</label>
+                                                                <input type="hidden" name="phoneNumber" value="<%out.print(barangayList.get(ctr).getBarangayContact());%>"/>
+                                                                <input type="hidden" name="barangayID" value="<%out.println(barangayList.get(ctr).getBarangayID()); %>"/>
+                                                            </div>
+                                                            <button class="btn waves-effect waves-light green right" type="submit" name="action">Send Text
+                                                                <i class="mdi-content-send right"></i>
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+<%                                  } %>
+                                </ul>
+                            </div>                            
+                        </div>
+                    </div>                                                        
+                </div>
+            </div>
+            <div class="">
+                <div class="row">
+                    <div class="col s12 m4" style="max-height: 500px; overflow-y: auto;"> 
                     <div id="weekview" class="fixed">
                         <div class="col s12 ">
 
@@ -68,8 +146,9 @@
                                             <li>
                                                 <div class="collapsible-header">
                                                     <i class="mdi-social-person"></i>
-                                                    Laurenz tolentino
+                                                    <a href="#">Laurenz tolentino</a>
                                                 </div>
+                                                <!--
                                                 <div class="collapsible-body grey lighten-5">                                                    
                                                     <ul class="collection with-header">
                                                         <li class="collection-header">
@@ -90,49 +169,14 @@
                                                         <li class="collection-item"> Miranda Kerr </li>
                                                         <li class="collection-item"> Steve Kerr </li>
                                                     </ul>
-                                                    <!--
-                                                    <div>                                                        
-                                                        <div id="assigned-patients">
-                                                            <ul class="collapsible" data-collapsible="accordion">
-                                                                <li>
-                                                                    <div class="collapsible-header">
-                                                                        <i class="mdi-social-person"></i>
-                                                                        Assigned Patients
-                                                                    </div>
-                                                                    <div class="collapsible-body light-blue lighten-4">Miranda Kerr</div>
-                                                                    <div class="collapsible-body light-blue lighten-4">Steve Kerr</div>
-                                                                </li>                                                                    
-                                                            </ul>
-                                                        </div>                                                                                                              
-                                                    </div>
-                                                    -->
+                                                    
                                                 </div>
+                                                -->
                                             </li>
                                             <li>
                                                 <div class="collapsible-header">
                                                     <i class="mdi-social-person"></i>
                                                     Taylor Swift
-                                                </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>                                                    
                                                 </div>
                                             </li>
                                             <li>
@@ -140,54 +184,14 @@
                                                     <i class="mdi-social-person"></i>
                                                     Emma Watson
                                                 </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>                                                    
-                                                </div>
+                                                
                                             </li>
                                             <li>
                                                 <div class="collapsible-header">
                                                     <i class="mdi-social-person"></i>
                                                     Miranda Kerr
                                                 </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>                                                    
-                                                </div>
+                                            
                                             </li>
                                         </ul>
                                     </div>
@@ -205,69 +209,11 @@
                                                     <i class="mdi-social-person"></i>
                                                     Laurenz tolentino
                                                 </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>
-                                                    <!--
-                                                    <div>                                                        
-                                                        <div id="assigned-patients">
-                                                            <ul class="collapsible" data-collapsible="accordion">
-                                                                <li>
-                                                                    <div class="collapsible-header">
-                                                                        <i class="mdi-social-person"></i>
-                                                                        Assigned Patients
-                                                                    </div>
-                                                                    <div class="collapsible-body light-blue lighten-4">Miranda Kerr</div>
-                                                                    <div class="collapsible-body light-blue lighten-4">Steve Kerr</div>
-                                                                </li>                                                                    
-                                                            </ul>
-                                                        </div>                                                                                                              
-                                                    </div>
-                                                    -->
-                                                </div>
                                             </li>
                                             <li>
                                                 <div class="collapsible-header">
                                                     <i class="mdi-social-person"></i>
                                                     Taylor Swift
-                                                </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>                                                    
                                                 </div>
                                             </li>
                                             <li>
@@ -275,53 +221,11 @@
                                                     <i class="mdi-social-person"></i>
                                                     Emma Watson
                                                 </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>                                                    
-                                                </div>
                                             </li>
                                             <li>
                                                 <div class="collapsible-header">
                                                     <i class="mdi-social-person"></i>
                                                     Miranda Kerr
-                                                </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>                                                    
                                                 </div>
                                             </li>
                                         </ul>
@@ -340,69 +244,11 @@
                                                     <i class="mdi-social-person"></i>
                                                     Laurenz tolentino
                                                 </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>
-                                                    <!--
-                                                    <div>                                                        
-                                                        <div id="assigned-patients">
-                                                            <ul class="collapsible" data-collapsible="accordion">
-                                                                <li>
-                                                                    <div class="collapsible-header">
-                                                                        <i class="mdi-social-person"></i>
-                                                                        Assigned Patients
-                                                                    </div>
-                                                                    <div class="collapsible-body light-blue lighten-4">Miranda Kerr</div>
-                                                                    <div class="collapsible-body light-blue lighten-4">Steve Kerr</div>
-                                                                </li>                                                                    
-                                                            </ul>
-                                                        </div>                                                                                                              
-                                                    </div>
-                                                    -->
-                                                </div>
                                             </li>
                                             <li>
                                                 <div class="collapsible-header">
                                                     <i class="mdi-social-person"></i>
                                                     Taylor Swift
-                                                </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>                                                    
                                                 </div>
                                             </li>
                                             <li>
@@ -410,53 +256,11 @@
                                                     <i class="mdi-social-person"></i>
                                                     Emma Watson
                                                 </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>                                                    
-                                                </div>
                                             </li>
                                             <li>
                                                 <div class="collapsible-header">
                                                     <i class="mdi-social-person"></i>
                                                     Miranda Kerr
-                                                </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>                                                    
                                                 </div>
                                             </li>
                                         </ul>
@@ -475,69 +279,11 @@
                                                     <i class="mdi-social-person"></i>
                                                     Laurenz tolentino
                                                 </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>
-                                                    <!--
-                                                    <div>                                                        
-                                                        <div id="assigned-patients">
-                                                            <ul class="collapsible" data-collapsible="accordion">
-                                                                <li>
-                                                                    <div class="collapsible-header">
-                                                                        <i class="mdi-social-person"></i>
-                                                                        Assigned Patients
-                                                                    </div>
-                                                                    <div class="collapsible-body light-blue lighten-4">Miranda Kerr</div>
-                                                                    <div class="collapsible-body light-blue lighten-4">Steve Kerr</div>
-                                                                </li>                                                                    
-                                                            </ul>
-                                                        </div>                                                                                                              
-                                                    </div>
-                                                    -->
-                                                </div>
                                             </li>
                                             <li>
                                                 <div class="collapsible-header">
                                                     <i class="mdi-social-person"></i>
                                                     Taylor Swift
-                                                </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>                                                    
                                                 </div>
                                             </li>
                                             <li>
@@ -545,53 +291,11 @@
                                                     <i class="mdi-social-person"></i>
                                                     Emma Watson
                                                 </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>                                                    
-                                                </div>
                                             </li>
                                             <li>
                                                 <div class="collapsible-header">
                                                     <i class="mdi-social-person"></i>
                                                     Miranda Kerr
-                                                </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>                                                    
                                                 </div>
                                             </li>
                                         </ul>
@@ -610,69 +314,11 @@
                                                     <i class="mdi-social-person"></i>
                                                     Laurenz tolentino
                                                 </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>
-                                                    <!--
-                                                    <div>                                                        
-                                                        <div id="assigned-patients">
-                                                            <ul class="collapsible" data-collapsible="accordion">
-                                                                <li>
-                                                                    <div class="collapsible-header">
-                                                                        <i class="mdi-social-person"></i>
-                                                                        Assigned Patients
-                                                                    </div>
-                                                                    <div class="collapsible-body light-blue lighten-4">Miranda Kerr</div>
-                                                                    <div class="collapsible-body light-blue lighten-4">Steve Kerr</div>
-                                                                </li>                                                                    
-                                                            </ul>
-                                                        </div>                                                                                                              
-                                                    </div>
-                                                    -->
-                                                </div>
                                             </li>
                                             <li>
                                                 <div class="collapsible-header">
                                                     <i class="mdi-social-person"></i>
                                                     Taylor Swift
-                                                </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>                                                    
                                                 </div>
                                             </li>
                                             <li>
@@ -680,53 +326,11 @@
                                                     <i class="mdi-social-person"></i>
                                                     Emma Watson
                                                 </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>                                                    
-                                                </div>
                                             </li>
                                             <li>
                                                 <div class="collapsible-header">
                                                     <i class="mdi-social-person"></i>
                                                     Miranda Kerr
-                                                </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>                                                    
                                                 </div>
                                             </li>
                                         </ul>
@@ -745,69 +349,11 @@
                                                     <i class="mdi-social-person"></i>
                                                     Laurenz tolentino
                                                 </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>
-                                                    <!--
-                                                    <div>                                                        
-                                                        <div id="assigned-patients">
-                                                            <ul class="collapsible" data-collapsible="accordion">
-                                                                <li>
-                                                                    <div class="collapsible-header">
-                                                                        <i class="mdi-social-person"></i>
-                                                                        Assigned Patients
-                                                                    </div>
-                                                                    <div class="collapsible-body light-blue lighten-4">Miranda Kerr</div>
-                                                                    <div class="collapsible-body light-blue lighten-4">Steve Kerr</div>
-                                                                </li>                                                                    
-                                                            </ul>
-                                                        </div>                                                                                                              
-                                                    </div>
-                                                    -->
-                                                </div>
                                             </li>
                                             <li>
                                                 <div class="collapsible-header">
                                                     <i class="mdi-social-person"></i>
                                                     Taylor Swift
-                                                </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>                                                    
                                                 </div>
                                             </li>
                                             <li>
@@ -815,53 +361,11 @@
                                                     <i class="mdi-social-person"></i>
                                                     Emma Watson
                                                 </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>                                                    
-                                                </div>
                                             </li>
                                             <li>
                                                 <div class="collapsible-header">
                                                     <i class="mdi-social-person"></i>
                                                     Miranda Kerr
-                                                </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>                                                    
                                                 </div>
                                             </li>
                                         </ul>
@@ -880,69 +384,11 @@
                                                     <i class="mdi-social-person"></i>
                                                     Laurenz tolentino
                                                 </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>
-                                                    <!--
-                                                    <div>                                                        
-                                                        <div id="assigned-patients">
-                                                            <ul class="collapsible" data-collapsible="accordion">
-                                                                <li>
-                                                                    <div class="collapsible-header">
-                                                                        <i class="mdi-social-person"></i>
-                                                                        Assigned Patients
-                                                                    </div>
-                                                                    <div class="collapsible-body light-blue lighten-4">Miranda Kerr</div>
-                                                                    <div class="collapsible-body light-blue lighten-4">Steve Kerr</div>
-                                                                </li>                                                                    
-                                                            </ul>
-                                                        </div>                                                                                                              
-                                                    </div>
-                                                    -->
-                                                </div>
                                             </li>
                                             <li>
                                                 <div class="collapsible-header">
                                                     <i class="mdi-social-person"></i>
                                                     Taylor Swift
-                                                </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>                                                    
                                                 </div>
                                             </li>
                                             <li>
@@ -950,53 +396,11 @@
                                                     <i class="mdi-social-person"></i>
                                                     Emma Watson
                                                 </div>
-                                                <div class="collapsible-body grey lighten-5">
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>                                                    
-                                                </div>
                                             </li>
                                             <li>
                                                 <div class="collapsible-header">
                                                     <i class="mdi-social-person"></i>
                                                     Miranda Kerr
-                                                </div>
-                                                <div class="collapsible-body grey lighten-5">                                                    
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header">
-                                                            <b>Status</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            Active
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            <b>Duration</b>
-                                                        </li>
-                                                        <li class="collection-item">
-                                                            30 Days
-                                                        </li>
-                                                        <li class="collection-header">
-                                                            Assigned Patients
-                                                        </li>
-                                                        <li class="collection-item"> Miranda Kerr </li>
-                                                        <li class="collection-item"> Steve Kerr </li>
-                                                    </ul>                                                    
                                                 </div>
                                             </li>
                                         </ul>
@@ -1008,70 +412,30 @@
                     </div>
                     <!-- End of Week View -->                                        
                 </div>
-                <!-- Start of outbreak monitor thing -->
-                <div class="col s12 m8">                    
-                    <div class="card">                        
-                        <div class="card-content">
-                            <!-- title -->
-                            <span class="card-title black-text">
-                                Outbreak Monitor Protocol
-                            </span>
-                            <!-- body -->
-                            <div>
-                                <ul class="collapsible collection with-header">
-                                    <!-- BARANGAY -->
-                                    <!--THIS IS MY BOOKMARK-->
-                                    <%
-                                        barangayList = dao.getCountPerBarangay();
-                                        for(int ctr=0; ctr<barangayList.size(); ctr++){
-                                            out.println("<li>");
-                                            out.println("<div class=\"collapsible-header\">");
-                                            out.println(barangayList.get(ctr).getBarangayName());
-                                            out.println("<span class=\"badge\">"+barangayList.get(ctr).getPatientCount()+"</span>");
-                                            out.println("</div>");
-                                            out.println("<div class=\"collapsible-body grey lighten-3\">");
-                                            out.println("Contact Number: "+barangayList.get(ctr).getBarangayContact());
-                                            out.println("</div>");
-                                            out.println("</li>");
-                                        }
-                                    %>
-                                </ul>
-                            </div>                            
-                        </div>
-                    </div>                                                        
-                </div>
-            </div>
-            <div class="">
-                <div class="row">
-                    <div class="col s12">
+                    <div class="col s12 m8">
                         <div class="card grey lighten-4">
-                            <div class="card-content">
+                            <div class="card-content" 
+                                 style="max-height: 500px;
+                                        overflow-y: auto;">
                                 <span class="card-title black-text">Information Panel</span>                                
                                 <div class="row">
-                                    <div class="col s3">
-                                        <div class="card grey lighten lighten-5">
-                                            <div class="card-content">
-                                                <span class="card-title black-text">
-                                                    Brgy. Pikashoo
-                                                </span>                                                
-                                            </div>
-                                            <div class="card-content red lighten-1 white-text">
-                                                Has reached dangerous levels. 
-                                            </div>
-                                        </div>
+                                    <div class="col s12 m4">
+                                        <warn-red>
+                                            <h6>Brgy. Singalong</h6>
+                                            <button class="btn waves-effect waves-light red" type="submit" name="action">Action
+                                                <i class="mdi-content-send right"></i>
+                                            </button>
+                                        </warn-red>
+                                        
                                     </div>
-                                    <div class="col s3">
-                                        <div class="card grey lighten lighten-5">
-                                            <div class="card-content">
-                                                <span class="card-title black-text">
-                                                    Brgy. Sumsung
-                                                </span>                                                
-                                            </div>
-                                            <div class="card-content orange lighten-1 white-text">
-                                                Has reached warning levels. 
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <div class="col s12 m4">
+                                        <warn-orange>
+                                            <h6>Brgy. Burugtu</h6>
+                                            <button class="btn waves-effect waves-light orange" type="submit" name="action">Action
+                                                <i class="mdi-content-send right"></i>
+                                            </button>
+                                        </warn-orange>
+                                    </div>                                     
                                 </div>
                             </div>
                         </div>
@@ -1086,6 +450,7 @@
         <!-- Do Not Go Beyond Here -->
         <script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
       	<script type="text/javascript" src="js/materialize.min.js"></script>
+        
       	<script src='js/scrollReveal.min.js'></script>
         <script src="js/laurenz.js"></script>
         <script type="text/javascript">
