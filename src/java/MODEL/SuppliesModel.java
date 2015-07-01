@@ -14,6 +14,7 @@ public class SuppliesModel {
     private int supplyID;
     private String supplyName;
     private int amount;
+    private int capacity;
     private String hospital;
 
     /**
@@ -70,6 +71,20 @@ public class SuppliesModel {
      */
     public void setHospital(String hospital) {
         this.hospital = hospital;
+    }
+
+    /**
+     * @return the capacity
+     */
+    public int getCapacity() {
+        return capacity;
+    }
+
+    /**
+     * @param capacity the capacity to set
+     */
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
     }
 
 }

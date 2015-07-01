@@ -34,7 +34,7 @@ public class UserLogoutServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            RequestDispatcher rd= getServletContext().getRequestDispatcher("/login.jsp");
+            RequestDispatcher rd= getServletContext().getRequestDispatcher("/index.html");
             HttpSession sesh= request.getSession();
             sesh.invalidate();
             

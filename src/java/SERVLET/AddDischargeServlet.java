@@ -6,8 +6,11 @@
 
 package SERVLET;
 
+import DAO.PatientDAO;
+import MODEL.PatientModel;
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +31,24 @@ public class AddDischargeServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+            PatientModel model = new PatientModel();
+            PatientDAO patientDAO = new PatientDAO();
+            RequestDispatcher rd;
             
+            model.setPatientID(Integer.parseInt(request.getParameter("patient")));
+            model.setDateDischarged(new java.sql.Date(new java.util.Date().getTime()));
+            
+            if(patientDAO.dischargePatient(model)){
+                out.printf("<script>alert(\"Patient Discharged\")</script>");
+                rd = getServletContext().getRequestDispatcher("/patient-profile.jsp?patient="+model.getPatientID());
+                rd.include(request, response);
+                return;
+            }else{
+                out.printf("<script>alert(\"An Error Occured\")</script>");
+                rd = getServletContext().getRequestDispatcher("/patient-profile.jsp?patient="+model.getPatientID());
+                rd.include(request, response);
+                return;
+            }
         }
     }
 

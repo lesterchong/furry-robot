@@ -16,10 +16,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
-/**
- *
- * @author Lester Chong
- */
 public class BarangayDAO {
     private Connection con;
     private PreparedStatement ps;
@@ -57,7 +53,6 @@ public class BarangayDAO {
                     smsModel.setSmsFrom(rs2.getString("smsFrom"));
                     smsModel.setDateSent(rs2.getDate("dateSent"));
                     smsList.add(smsModel);
-                    System.out.println(smsList.size());
                 }
                 model.setSmsHistory(smsList);
                 list.add(model);
@@ -119,5 +114,29 @@ public class BarangayDAO {
             }
         }
         return null;
+    }
+    
+    public LinkedList<BarangayModel> getCountPerBarangaySansSMS(){
+        LinkedList<BarangayModel> list = new LinkedList<>();
+        BarangayModel model;
+        
+        cf = new ConcreteConnection();
+        try{
+            con = cf.getConnection();
+            ps = con.prepareStatement("SELECT barangayID, barangayName, barangayContact, COUNT(*) AS patientCount FROM admittance a, ref_barangay rb, patient p WHERE a.patientBarangay = rb.barangayID and a.admittanceID = p.patientID and p.dateDischarged IS NULL GROUP BY patientBarangay");
+            rs = ps.executeQuery();
+            while(rs.next()){
+                model = new BarangayModel();
+                model.setBarangayID(rs.getInt("barangayID"));
+                model.setBarangayName(rs.getString("barangayName"));
+                model.setBarangayContact(rs.getLong("barangayContact"));
+                model.setPatientCount(rs.getInt("patientCount"));
+                list.add(model);
+            }
+            con.close();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return list;
     }
 }

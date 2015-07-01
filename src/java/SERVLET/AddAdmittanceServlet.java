@@ -7,11 +7,17 @@
 package SERVLET;
 
 import DAO.AdmittanceDAO;
+import DAO.PatientDAO;
+import DAO.StaffDAO;
+import DAO.WardDAO;
 import MODEL.AdmittanceModel;
+import MODEL.PatientModel;
+import MODEL.WardModel;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.LinkedList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -34,9 +40,16 @@ public class AddAdmittanceServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             AdmittanceModel model = new AdmittanceModel();
+            PatientModel patientModel = new PatientModel();
+            LinkedList<WardModel> wardList = new LinkedList<>();
             AdmittanceDAO dao = new AdmittanceDAO();
+            PatientDAO patientDAO = new PatientDAO();
+            StaffDAO staffDAO = new StaffDAO();
+            WardDAO wardDAO = new WardDAO();
             SimpleDateFormat sd = new SimpleDateFormat("dd MMMM, yyyy");
             RequestDispatcher rd;
+            
+            wardList = wardDAO.getPatientCountPerWard();
             
             try{
                 model.setPatientFirstName(request.getParameter("patientFirstName"));
@@ -59,21 +72,34 @@ public class AddAdmittanceServlet extends HttpServlet {
                 model.setCompanionLastName(request.getParameter("companionLastName"));
                 model.setCompanionPhoneNumber(Long.parseLong(request.getParameter("companionPhoneNumber")));
                 model.setCompanionRelationship(request.getParameter("companionRelationship"));
-                
                 model.setDateFiled(new java.sql.Date(new java.util.Date().getTime()));
-                //
                 model.setHospitalID(0);
-                if(dao.addAdmittance(model)){
+                //PatientDAO here. Determine ward and diagnosis.
+                if(wardList.get(0).getCurrentNumber() == wardList.get(0).getCapacity())
+                    patientModel.setPatientWard("0");
+                else if(wardList.get(1).getCurrentNumber() == wardList.get(1).getCapacity())
+                    patientModel.setPatientWard("1");
+                else
+                    patientModel.setPatientWard("2");
+                patientModel.setPatientDiagnosis(request.getParameter("diagnosis"));
+                patientModel.setAssignedNurse(String.valueOf(staffDAO.getStaffIDWithFewestPatients()));
+                System.out.println(String.valueOf(staffDAO.getStaffIDWithFewestPatients()));
+                
+                rd = getServletContext().getRequestDispatcher("/admissions.jsp");
+                
+                if(dao.addAdmittance(model) && patientDAO.addPatient(patientModel)){
                     out.printf("<script>alert(\"Successfully Updated\")</script>");
-                    rd = getServletContext().getRequestDispatcher("/index.html");
                     rd.include(request, response);
                     return;
                 }else{
                     out.printf("<script>alert(\"Could Not Update\")</script>");
+                    rd.include(request, response);
                     return;
                 }
             }catch(ParseException e){
                 out.printf("<script>alert(\"An Error Occured\")</script>");
+                rd = getServletContext().getRequestDispatcher("/admissions.jsp");
+                rd.include(request, response);
                 return;
             }
         }

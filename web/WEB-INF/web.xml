@@ -27,6 +27,54 @@
         <servlet-name>SendTextServlet</servlet-name>
         <servlet-class>SERVLET.SendTextServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UpdateScheduleServlet</servlet-name>
+        <servlet-class>SERVLET.UpdateScheduleServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddProtocolServlet</servlet-name>
+        <servlet-class>SERVLET.AddProtocolServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdatePatientVitalsServlet</servlet-name>
+        <servlet-class>SERVLET.UpdatePatientVitalsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdatePatientSymptomServlet</servlet-name>
+        <servlet-class>SERVLET.UpdatePatientSymptomServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateProcedureServlet</servlet-name>
+        <servlet-class>SERVLET.UpdateProcedureServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchStaffByNameServlet</servlet-name>
+        <servlet-class>SERVLET.SearchStaffByNameServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchPatientByNameServlet</servlet-name>
+        <servlet-class>SERVLET.SearchPatientByNameServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddStaffServlet</servlet-name>
+        <servlet-class>SERVLET.AddStaffServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TransferServlet</servlet-name>
+        <servlet-class>SERVLET.TransferServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AlertBarangayServlet</servlet-name>
+        <servlet-class>SERVLET.AlertBarangayServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchSupplyServlet</servlet-name>
+        <servlet-class>SERVLET.SearchSupplyServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GenerateDischargeReport</servlet-name>
+        <servlet-class>SERVLET.GenerateDischargeReport</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AddAdmittanceServlet</servlet-name>
         <url-pattern>/AddAdmittanceServlet</url-pattern>
@@ -50,6 +98,54 @@
     <servlet-mapping>
         <servlet-name>SendTextServlet</servlet-name>
         <url-pattern>/SendTextServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateScheduleServlet</servlet-name>
+        <url-pattern>/UpdateScheduleServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddProtocolServlet</servlet-name>
+        <url-pattern>/AddProtocolServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdatePatientVitalsServlet</servlet-name>
+        <url-pattern>/UpdatePatientVitalsServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdatePatientSymptomServlet</servlet-name>
+        <url-pattern>/UpdatePatientSymptomServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateProcedureServlet</servlet-name>
+        <url-pattern>/UpdateProcedureServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchStaffByNameServlet</servlet-name>
+        <url-pattern>/SearchStaffByNameServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchPatientByNameServlet</servlet-name>
+        <url-pattern>/SearchPatientByNameServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddStaffServlet</servlet-name>
+        <url-pattern>/AddStaffServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TransferServlet</servlet-name>
+        <url-pattern>/TransferServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AlertBarangayServlet</servlet-name>
+        <url-pattern>/AlertBarangayServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchSupplyServlet</servlet-name>
+        <url-pattern>/SearchSupplyServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GenerateDischargeReport</servlet-name>
+        <url-pattern>/GenerateDischargeReport</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

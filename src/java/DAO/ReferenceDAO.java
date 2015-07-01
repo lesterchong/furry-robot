@@ -117,4 +117,89 @@ public class ReferenceDAO {
         }
         return list;
     }
+    
+    public LinkedList<ReferenceModel> getDiagnoses(){
+        cf = new ConcreteConnection();
+        
+        try{
+            list = new LinkedList<>();
+            con = cf.getConnection();
+            ps = con.prepareStatement("SELECT * FROM ref_diagnosis");
+            rs = ps.executeQuery();
+            while(rs.next()){
+                model = new ReferenceModel();
+                model.setReferenceID(rs.getInt("diagnosisID"));
+                model.setReferenceName(rs.getString("diagnosisName"));
+                list.add(model);
+            }
+            con.close();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    public LinkedList<ReferenceModel> getWards(){
+        cf = new ConcreteConnection();
+        
+        try{
+            list = new LinkedList<>();
+            con = cf.getConnection();
+            ps = con.prepareStatement("SELECT * FROM ref_ward");
+            rs = ps.executeQuery();
+            while(rs.next()){
+                model = new ReferenceModel();
+                model.setReferenceID(rs.getInt("wardID"));
+                model.setReferenceName(rs.getString("wardName"));
+                model.setContactNumber(rs.getInt("capacity"));
+                list.add(model);
+            }
+            con.close();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    public LinkedList<ReferenceModel> getProtocolColors(){
+        cf = new ConcreteConnection();
+        
+        try{
+            list = new LinkedList<>();
+            con = cf.getConnection();
+            ps = con.prepareStatement("SELECT * FROM ref_protocol_color");
+            rs = ps.executeQuery();
+            while(rs.next()){
+                model = new ReferenceModel();
+                model.setReferenceID(rs.getInt("colorID"));
+                model.setReferenceName(rs.getString("colorName"));
+                list.add(model);
+            }
+            con.close();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    public LinkedList<ReferenceModel> getShiftStatus(){
+        cf = new ConcreteConnection();
+        
+        try{
+            list = new LinkedList<>();
+            con = cf.getConnection();
+            ps = con.prepareStatement("SELECT * FROM ref_shiftstatus");
+            rs = ps.executeQuery();
+            while(rs.next()){
+                model = new ReferenceModel();
+                model.setReferenceID(rs.getInt("shiftID"));
+                model.setReferenceName(rs.getString("shiftName"));
+                list.add(model);
+            }
+            con.close();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

@@ -35,11 +35,11 @@
                 <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
                 <ul class="right hide-on-med-and-down">
                     <li><a href="admissions.jsp">Admissions</a></li>
-                    <li><a href="nurse-board2.jsp">Dashboard</a></li>                    
+                    <li><a href="headnurse-main.jsp">Dashboard</a></li>                    
                 </ul>
                 <ul class="side-nav" id="mobile-demo">
                     <li><a href="admissions.jsp">Admissions</a></li>
-                    <li><a href="nurse-board2.jsp">Dashboard</a></li>                    
+                    <li><a href="headnurse-main.jsp">Dashboard</a></li>                  
                 </ul>
             </div>
         </nav>      
@@ -115,7 +115,7 @@
                                         <label for="p_address">Incident Location</label>
                                     </div>                                    
                                     <div class="input-field col m4 s12">                                
-                                        <select id="p_incident_address" class="browser-default" name="incidentBarangay">                                    
+                                        <select id="p_incident_address" class="browser-default" name="incidentBarangay">
                                             <option value="" disabled selected>BRGY</option>
                                             <%
                                                 list = dao.getBarangays();
@@ -124,16 +124,26 @@
                                             %>
                                         </select>                                
                                     </div>
-                                    <div class="input-field col m12 s12">
+                                    <div class="input-field col m8 s12">
                                         <textarea id="p_allergies" class="materialize-textarea" name="knownAllergy"></textarea>
                                         <label for="p_allergies">Known Allergies</label>
                                     </div>
+                                    <div class="input-field col m4 s12">
+                                        <select id="p_incident_address" class="browser-default" name="diagnosis">
+                                            <option value="" disabled selected>Condition</option>
+                                            <%
+                                                list = dao.getDiagnoses();
+                                                for(int ctr=0; ctr<list.size(); ctr++)
+                                                    out.println("<option value="+list.get(ctr).getReferenceID()+">"+list.get(ctr).getReferenceName()+"</option>");
+                                            %>
+                                        </select>
+                                    </div>    
                                 </div>              
                                 
                                 <!-- Companion's Information -->
                                 <div id="companion" class="row">
                                     <h5 class="roboto-300">
-                                        Companion's Name
+                                        Emergency Contact
                                     </h5>                            
                                     <div class="input-field col m6 s12">
                                         <input id="c_lastname" type="text" class="validate" name="companionLastName">
@@ -167,7 +177,7 @@
                                     </div>  
                                     <div class="input-field col m8 s12">
                                         <textarea id="c_address" class="materialize-textarea" name="companionAddress"></textarea>
-                                        <label for="c_address">Companion's Address</label>
+                                        <label for="c_address">Emergency Contact's Address</label>
                                     </div>
                                     <div class="input-field col m4 s12">                                
                                         <select id="c_address" class="browser-default" name="companionBarangay">                                    

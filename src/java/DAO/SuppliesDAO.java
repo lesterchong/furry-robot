@@ -38,6 +38,7 @@ public class SuppliesDAO {
                 temp = new SuppliesModel();
                 temp.setSupplyID(rs.getInt("supplyID"));
                 temp.setSupplyName(rs.getString("supplyName"));
+                temp.setCapacity(rs.getInt("capacity"));
                 temp.setAmount(rs.getInt("amount"));
                 temp.setHospital(rs.getString("hospitalName"));
                 supplyList.add(temp);
@@ -45,7 +46,7 @@ public class SuppliesDAO {
             con.close();
             return supplyList;
         }catch(SQLException e){
-            
+            e.printStackTrace();
         }
         return null;
     }
@@ -84,5 +85,30 @@ public class SuppliesDAO {
         return false;
     }
     
-    
+    public LinkedList<SuppliesModel> searchSuppliesByName(String search){
+        LinkedList<SuppliesModel> list = new LinkedList<>();
+        SuppliesModel model;
+        cf = new ConcreteConnection();
+        search = "%"+search+"%";
+        
+        try{
+            con = cf.getConnection();
+            ps = con.prepareStatement("SELECT * FROM supplies WHERE supplyName LIKE ?");
+            ps.setString(1, search);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                model = new SuppliesModel();
+                model.setAmount(rs.getInt("amount"));
+                model.setCapacity(rs.getInt("capacity"));
+                model.setHospital(rs.getString("hospitalID"));
+                model.setSupplyID(rs.getInt("supplyID"));
+                model.setSupplyName(rs.getString("supplyName"));
+                list.add(model);
+            }
+            con.close();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return list;
+    }
 }
