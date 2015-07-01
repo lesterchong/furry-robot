@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package SERVLET;
 
 import DAO.PatientDAO;
@@ -41,27 +40,42 @@ public class UpdateProcedureServlet extends HttpServlet {
             PatientModel model2;
             ProcedureModel procedureModel = new ProcedureModel();
             RequestDispatcher rd;
-            
+
+//            model.setPatientID(Integer.parseInt(request.getParameter("patientID")));
             model.setPatientID(Integer.parseInt(request.getParameter("patientID")));
+            procedureModel.setMcv(Boolean.parseBoolean(request.getParameter("mcv")));
+            procedureModel.setMchb(Boolean.parseBoolean(request.getParameter("mchb")));
+            procedureModel.setHemocrit(Boolean.parseBoolean(request.getParameter("hemocrit")));
+            procedureModel.setRbc(Boolean.parseBoolean(request.getParameter("rbc")));
+            procedureModel.setDifferential(Boolean.parseBoolean(request.getParameter("differential")));
+            procedureModel.setRbcdw(Boolean.parseBoolean(request.getParameter("rbcdw")));
+            procedureModel.setChloride(Boolean.parseBoolean(request.getParameter("chloride")));
+            procedureModel.setUrea(Boolean.parseBoolean(request.getParameter("urea")));
+            procedureModel.setCreatine(Boolean.parseBoolean(request.getParameter("creatine")));
+            procedureModel.setPacked(Boolean.parseBoolean(request.getParameter("packed")));
+            procedureModel.setSodium(Boolean.parseBoolean(request.getParameter("sodium")));
+            procedureModel.setPotassium(Boolean.parseBoolean(request.getParameter("potassium")));
+            procedureModel.setBicarbonate(Boolean.parseBoolean(request.getParameter("bicarbonate")));
+            procedureModel.setCreatinine(Boolean.parseBoolean(request.getParameter("creatinine")));
+            procedureModel.setEsr(Boolean.parseBoolean(request.getParameter("esr")));
+            procedureModel.setHemoglobin(Boolean.parseBoolean(request.getParameter("hemoglobin")));
+            procedureModel.setPlatelet(Boolean.parseBoolean(request.getParameter("platelet")));
+            procedureModel.setWbc(Boolean.parseBoolean(request.getParameter("wbc")));
             procedureModel.setAlt(Boolean.parseBoolean(request.getParameter("alt")));
             procedureModel.setAst(Boolean.parseBoolean(request.getParameter("ast")));
-            procedureModel.setCbc(Boolean.parseBoolean(request.getParameter("cbc")));
-            procedureModel.setHemocrit(Boolean.parseBoolean(request.getParameter("hemocrit")));
-            procedureModel.setHemoglobin(Boolean.parseBoolean(request.getParameter("hemoglobin")));
-            procedureModel.setPlatelets(Boolean.parseBoolean(request.getParameter("platelets")));
             procedureModel.setTourniquet(Boolean.parseBoolean(request.getParameter("tourniquet")));
-            procedureModel.setWbc(Boolean.parseBoolean(request.getParameter("wbc")));
+            procedureModel.setCbc(Boolean.parseBoolean(request.getParameter("cbc")));
             procedureModel.setDateTaken(new java.sql.Date(new java.util.Date().getTime()));
             model.setPatientProcedure(procedureModel);
-            
-            rd = getServletContext().getRequestDispatcher("/patient-profile.jsp?patient="+model.getPatientID());
+
+            rd = getServletContext().getRequestDispatcher("/patient-profile.jsp?patient=" + model.getPatientID());
             model2 = patientDAO.getPatientByID(model.getPatientID());
-            
-            if(patientDAO.transferProcedureToHistory(model2) && patientDAO.updateProcedure(model)){
+
+            if (patientDAO.transferProcedureToHistory(model2) && patientDAO.updateProcedure(model)) {
                 out.printf("<script>alert(\"Successfully Updated\")</script>");
                 rd.include(request, response);
                 return;
-            }else{
+            } else {
                 out.printf("<script>alert(\"Could Not Update\")</script>");
                 rd.include(request, response);
                 return;

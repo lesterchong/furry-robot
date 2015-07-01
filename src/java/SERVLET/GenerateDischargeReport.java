@@ -48,7 +48,6 @@ public class GenerateDischargeReport extends HttpServlet {
             if(!file.exists())
                 file.createNewFile();
             
-            System.out.println(file.getCanonicalPath());
             patientList = patientDAO.getDischargedPatients();
             bw.write("Patient Name, ");
             bw.write("Date Admitted, ");
@@ -70,7 +69,7 @@ public class GenerateDischargeReport extends HttpServlet {
             bw.close();
             
             rd = getServletContext().getRequestDispatcher("/it-main.html");
-            out.printf("<script>alert(\"Report Succesfully Generated\")</script>");
+            out.printf("<script>alert(\"Report Succesfully Generated at "+file.getCanonicalPath()+"\")</script>");
             rd.include(request, response);
             return;
         }

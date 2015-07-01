@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package SERVLET;
 
 import DAO.PatientDAO;
@@ -41,44 +40,28 @@ public class UpdatePatientSymptomServlet extends HttpServlet {
             PatientDAO patientDAO = new PatientDAO();
             SymptomModel symptomModel = new SymptomModel();
             RequestDispatcher rd;
-            
+
             patientModel.setPatientID(Integer.parseInt(request.getParameter("patientID")));
-            if(request.getParameter("abdominalPain").equals("true"))
-                symptomModel.setAbdominalPain(true);
-            else
-                symptomModel.setAbdominalPain(false);
-            
-            if(request.getParameter("abdominalPain").equals("true"))
-                symptomModel.setAscites(true);
-            else
-                symptomModel.setAscites(false);
-            
-            if(request.getParameter("abdominalPain").equals("true"))
-                symptomModel.setHypotension(true);
-            else
-                symptomModel.setHypotension(false);
-            
-            if(request.getParameter("abdominalPain").equals("true"))
-                symptomModel.setPleuralEffusion(true);
-            else
-                symptomModel.setPleuralEffusion(false);
-            
+            symptomModel.setAbdominalPain(Boolean.parseBoolean(request.getParameter("abdominalPain")));
+            symptomModel.setAscites(Boolean.parseBoolean(request.getParameter("ascites")));
+            symptomModel.setHypotension(Boolean.parseBoolean(request.getParameter("hypotension")));
+            symptomModel.setPleuralEffusion(Boolean.parseBoolean(request.getParameter("pleuralEffusion")));
             symptomModel.setJaundice(request.getParameter("jaundice"));
             symptomModel.setLiver(Float.parseFloat(request.getParameter("liver")));
             symptomModel.setSpleen(Float.parseFloat(request.getParameter("spleen")));
             symptomModel.setDateTaken(new java.sql.Date(new java.util.Date().getTime()));
             patientModel.setPatientSymptoms(symptomModel);
-            
-            rd = getServletContext().getRequestDispatcher("/patient-profile.jsp?patient="+patientModel.getPatientID());
+
+            rd = getServletContext().getRequestDispatcher("/patient-profile.jsp?patient=" + patientModel.getPatientID());
             patientModel2 = patientDAO.getPatientByID(patientModel.getPatientID());
-            
+
             patientDAO.transferSymptomsToHistory(patientModel2);
-            
-            if(patientDAO.transferSymptomsToHistory(patientModel2) && patientDAO.updateSymptom(patientModel)){
+
+            if (patientDAO.transferSymptomsToHistory(patientModel2) && patientDAO.updateSymptom(patientModel)) {
                 out.printf("<script>alert(\"Successfully Updated\")</script>");
                 rd.include(request, response);
                 return;
-            }else{
+            } else {
                 out.printf("<script>alert(\"Could Not Update\")</script>");
                 rd.include(request, response);
                 return;
