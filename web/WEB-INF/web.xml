@@ -60,10 +60,6 @@
         <servlet-class>SERVLET.AddStaffServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>TransferServlet</servlet-name>
-        <servlet-class>SERVLET.TransferServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>AlertBarangayServlet</servlet-name>
         <servlet-class>SERVLET.AlertBarangayServlet</servlet-class>
     </servlet>
@@ -74,6 +70,14 @@
     <servlet>
         <servlet-name>GenerateDischargeReport</servlet-name>
         <servlet-class>SERVLET.GenerateDischargeReport</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TransferPatientServlet</servlet-name>
+        <servlet-class>SERVLET.TransferPatientServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PendingPatientTransferServlet</servlet-name>
+        <servlet-class>SERVLET.PendingPatientTransferServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AddAdmittanceServlet</servlet-name>
@@ -132,10 +136,6 @@
         <url-pattern>/AddStaffServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>TransferServlet</servlet-name>
-        <url-pattern>/TransferServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>AlertBarangayServlet</servlet-name>
         <url-pattern>/AlertBarangayServlet</url-pattern>
     </servlet-mapping>
@@ -146,6 +146,14 @@
     <servlet-mapping>
         <servlet-name>GenerateDischargeReport</servlet-name>
         <url-pattern>/GenerateDischargeReport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TransferPatientServlet</servlet-name>
+        <url-pattern>/TransferPatientServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PendingPatientTransferServlet</servlet-name>
+        <url-pattern>/PendingPatientTransferServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -8,24 +8,15 @@ package SERVLET;
 
 import DAO.PatientDAO;
 import MODEL.PatientModel;
-import SMTP.SMTPDAO;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.LinkedList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- *
- * @author Lester Chong
- */
-public class GenerateDischargeReport extends HttpServlet {
+public class PendingPatientTransferServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,15 +31,19 @@ public class GenerateDischargeReport extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            SMTPDAO email = new SMTPDAO();
+            PatientDAO patientDAO = new PatientDAO();
+            PatientModel patientModel;
             RequestDispatcher rd;
+            int patientID;
             
-            if(email.sendDischargeReport()){
-                rd = getServletContext().getRequestDispatcher("/it-main.html");
-                out.printf("<script>alert(\"Report Succesfully Sent\")</script>");
-                rd.include(request, response);
-                return;
-            }
+            patientID = Integer.parseInt(request.getParameter("patient"));
+            patientModel = patientDAO.getPatientByID(patientID);
+            patientDAO.addToPendingTransfer(patientModel);
+            
+            rd = getServletContext().getRequestDispatcher("/patient-profile.jsp?patient="+patientID);
+            out.printf("<script>alert(\"Request for Transfer Sent to IT\")</script>");
+            rd.include(request, response);
+            return;
         }
     }
 

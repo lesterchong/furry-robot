@@ -54,7 +54,7 @@ public class ReferenceDAO {
         return list;
     }
     
-    public LinkedList<ReferenceModel> getPharmacy(){
+    public LinkedList<ReferenceModel> getHospitals(){
         cf = new ConcreteConnection();
         
         try{
@@ -67,6 +67,7 @@ public class ReferenceDAO {
                 model.setReferenceID(rs.getInt("hospitalID"));
                 model.setReferenceName(rs.getString("hospitalName"));
                 model.setContactNumber(rs.getLong("hospitalContact"));
+                model.setEmail(rs.getString("hospitalEmail"));
                 list.add(model);
             }
             con.close();

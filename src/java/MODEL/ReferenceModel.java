@@ -6,14 +6,11 @@
 
 package MODEL;
 
-/**
- *
- * @author Lester Chong
- */
 public class ReferenceModel {
     private int referenceID;
     private String referenceName;
     private long contactNumber;
+    private String email;
 
     /**
      * @return the referenceID
@@ -55,6 +52,20 @@ public class ReferenceModel {
      */
     public void setContactNumber(long contactNumber) {
         this.contactNumber = contactNumber;
+    }
+
+    /**
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * @param email the email to set
+     */
+    public void setEmail(String email) {
+        this.email = email;
     }
     
 }

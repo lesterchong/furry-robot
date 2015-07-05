@@ -111,14 +111,22 @@
                             -->
                             <div class="col s12 m6">                                
                                 <span class="card-title black-text">Barangays</span>                            
-                                <div class="card-content no-padding">
+                                <div class="card-content no-padding" >
                                     <!-- Modal Trigger -->
                                     <%
                                         barangayList = bdao.getCountPerBarangay();
                                         for(int ctr=0; ctr<barangayList.size(); ctr++){
                                     %>
-                                    <div class="collection">
-                                        <a href="#modal<%out.print(barangayList.get(ctr).getBarangayID());%>" class="collection-item modal-trigger black-text"><%out.print(barangayList.get(ctr).getBarangayName());%></a>
+                                    <div class="collection" >
+                                        <!--Please forgive the shitiness(ugliness) of the following line. Rush job. -->
+                                        <% if(barangayList.get(ctr).getPatientCount()>=50){ %>
+                                                <a href="#modal<%out.print(barangayList.get(ctr).getBarangayID());%>" class="collection-item modal-trigger black-text red"><%out.print(barangayList.get(ctr).getBarangayName());%></a>
+                                        <%    }else if(barangayList.get(ctr).getPatientCount()<50 && barangayList.get(ctr).getPatientCount()>=20){ %>
+                                                <a href="#modal<%out.print(barangayList.get(ctr).getBarangayID());%>" class="collection-item modal-trigger black-text yellow"><%out.print(barangayList.get(ctr).getBarangayName());%></a>
+                                        <%    }else{ %>
+                                                <a href="#modal<%out.print(barangayList.get(ctr).getBarangayID());%>" class="collection-item modal-trigger black-text"><%out.print(barangayList.get(ctr).getBarangayName());%></a>
+                                            <%}%>
+                                        
                                     </div>                                                           
                                     <!-- Modal Structure -->
                                     <div id="modal<%out.print(barangayList.get(ctr).getBarangayID());%>" class="modal grey darken-3">
@@ -362,39 +370,6 @@
                             </div>
                         </div>
                         <div class="card" data-sr="reset enter bottom move 40px">
-                            <div class="card-content orange">
-                                <span class="card-title">
-                                    Latest Outgoing Patients
-                                </span>
-                                <div class="right">
-                                    <a class="btn-large btn-floating orange center" href="patient-list.jsp">ALL</a>
-                                </div>
-                            </div>
-                            <div class="card-content no">
-                                <table class="centered">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Condition</th>
-                                            <th>Ward</th>                                            
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <%
-                                            patientList = pdao.getLatestTenDischargedPatients();
-                                            for(int ctr=0; ctr<patientList.size(); ctr++){
-                                        %>
-                                        <tr>
-                                            <td><a href="patient-profile.jsp?patient=<%out.print(patientList.get(ctr).getPatientID());%>"><%out.print(patientList.get(ctr).getPatientLastName()+", "+patientList.get(ctr).getPatientFirstName());%></a></td>
-                                            <td><%out.print(patientList.get(ctr).getPatientDiagnosis());%></td>
-                                            <td><%out.print(patientList.get(ctr).getPatientWard());%></td>
-                                        </tr>
-                                        <%}%>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="card" data-sr="reset enter bottom move 40px">
                             <div class="card-content grey darken-3">
                                 <span class="card-title">Casualty Count</span>
                             </div>
@@ -423,10 +398,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    
-                    
-                </div>
+
             </div>
         </section>
         <!-- Do Not Go Beyond Here -->

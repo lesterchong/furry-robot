@@ -42,14 +42,17 @@ public class UserAuthenticationServlet extends HttpServlet {
             
             if(dao.validateAccount(model)){
                 model = dao.getUserByUsername(model.getUsername());
-                HttpSession sesh = request.getSession();    
+                HttpSession sesh = request.getSession();
                 sesh.setAttribute("userLogged", model.getUserID());
                 sesh.setAttribute("username", model.getUsername());
                 sesh.setAttribute("userPrivy", model.getPrivilegeType());
                 sesh.setAttribute("hospitalID", model.getHospital());
                 sesh.setAttribute("isLogged", true);
                 out.printf("<script>alert(\"Successful Login\")</script>");
-                rd = getServletContext().getRequestDispatcher("/headnurse-main.jsp");
+                if(model.getPrivilegeType().equals("IT"))
+                    rd = getServletContext().getRequestDispatcher("/it-main.jsp");
+                else
+                    rd = getServletContext().getRequestDispatcher("/headnurse-main.jsp");
                 rd.include(request, response);
                 return;
             }else{

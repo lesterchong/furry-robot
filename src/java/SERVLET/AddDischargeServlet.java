@@ -32,15 +32,17 @@ public class AddDischargeServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             PatientModel model = new PatientModel();
+            PatientModel model2;
             PatientDAO patientDAO = new PatientDAO();
             RequestDispatcher rd;
             
             model.setPatientID(Integer.parseInt(request.getParameter("patient")));
             model.setDateDischarged(new java.sql.Date(new java.util.Date().getTime()));
+            model2 = patientDAO.getPatientRawDataByID(model.getPatientID());
             
-            if(patientDAO.dischargePatient(model)){
+            if(patientDAO.transferPatientToHistory(model2) && patientDAO.deletePatient(model)){
                 out.printf("<script>alert(\"Patient Discharged\")</script>");
-                rd = getServletContext().getRequestDispatcher("/patient-profile.jsp?patient="+model.getPatientID());
+                rd = getServletContext().getRequestDispatcher("/patient-list.jsp");
                 rd.include(request, response);
                 return;
             }else{

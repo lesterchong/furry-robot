@@ -6,18 +6,21 @@
 
 package SERVLET;
 
+import DAO.PatientDAO;
+import DAO.ReferenceDAO;
+import MODEL.PatientModel;
+import MODEL.ReferenceModel;
+import SMTP.SMTPDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.LinkedList;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- *
- * @author Lester Chong
- */
-public class TransferServlet extends HttpServlet {
+public class TransferPatientServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,7 +35,33 @@ public class TransferServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+            RequestDispatcher rd;
+            PatientDAO patientDAO = new PatientDAO();
+            SMTPDAO smtpDAO = new SMTPDAO();
+            ReferenceDAO refDAO = new ReferenceDAO();
+            LinkedList<ReferenceModel> refList = refDAO.getHospitals();
+            PatientModel patientModel;
+            int hospitalID;
+            String email=null;
             
+            hospitalID = Integer.parseInt(request.getParameter("hospitalID"));
+            patientModel = patientDAO.getPatientByID(Integer.parseInt(request.getParameter("patientID")));
+            for(int ctr=0; ctr<refList.size(); ctr++){
+                if(refList.get(ctr).getReferenceID() == hospitalID)
+                    email = refList.get(ctr).getEmail();
+            }
+            
+            rd = getServletContext().getRequestDispatcher("/it-main.jsp");
+            
+            if(smtpDAO.sendPatient(patientModel, email) && patientDAO.deleteFromPendingTransfer(patientModel)){
+                out.printf("<script>alert(\"Email Sent to "+email+"\")</script>");
+                rd.include(request, response);
+                return;
+            }else{
+                out.printf("<script>alert(\"Could Not Be Sent\")</script>");
+                rd.include(request, response);
+                return;
+            }
         }
     }
 

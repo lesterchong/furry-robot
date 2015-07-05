@@ -36,7 +36,7 @@
                 patientList = (LinkedList<PatientModel>)request.getSession().getAttribute("patientList");
                 request.getSession().setAttribute("patientList", null);
             }else
-                patientList = pdao.getUndischargedPatients();
+                patientList = pdao.getPatients();
         %>
         <!-- 
             nav bar 

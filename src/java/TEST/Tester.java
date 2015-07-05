@@ -13,18 +13,16 @@ import DAO.UserDAO;
 import MODEL.BarangayModel;
 import MODEL.PatientModel;
 import MODEL.UserModel;
+import SMTP.SMTPDAO;
 import java.util.LinkedList;
 
 public class Tester {
     public static void main(String args[]){
-        UserDAO dao = new UserDAO();
-        UserModel model = new UserModel();
-        model.setUsername("Nurse");
-        model.setPassword("1234");
-        model.setPrivilegeType("3");
-        model.setHospital("0");
-        model.setContactNumber(12345667);
-        dao.addUser(model);
+        SMTPDAO dao = new SMTPDAO();
+        PatientDAO pdao = new PatientDAO();
+        PatientModel model= pdao.getPatientByID(2);
+        System.out.println(model);
+        dao.sendPatient(model, "lestercharles486@yahoo.com");
     }
     
 }

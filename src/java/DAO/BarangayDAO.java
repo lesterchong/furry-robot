@@ -24,37 +24,19 @@ public class BarangayDAO {
     
     public LinkedList<BarangayModel> getCountPerBarangay(){
         LinkedList<BarangayModel> list = new LinkedList<>();
-        LinkedList<SMSModel> smsList;
-        SMSModel smsModel;
         BarangayModel model;
-        PreparedStatement ps2;
-        ResultSet rs2;
         
         cf = new ConcreteConnection();
         try{
             con = cf.getConnection();
-            ps = con.prepareStatement("SELECT barangayID, barangayName, barangayContact, COUNT(*) AS patientCount FROM admittance a, ref_barangay rb WHERE a.patientBarangay = rb.barangayID GROUP BY patientBarangay");
+            ps = con.prepareStatement("SELECT barangayID, barangayName, barangayContact, COUNT(*) AS patientCount FROM admittance a, ref_barangay rb, patient p WHERE a.patientBarangay = rb.barangayID and a.admittanceID = p.patientID GROUP BY patientBarangay");
             rs = ps.executeQuery();
             while(rs.next()){
                 model = new BarangayModel();
-                smsList = new LinkedList<>();
                 model.setBarangayID(rs.getInt("barangayID"));
                 model.setBarangayName(rs.getString("barangayName"));
                 model.setBarangayContact(rs.getLong("barangayContact"));
                 model.setPatientCount(rs.getInt("patientCount"));
-                
-                ps2 = con.prepareStatement("SELECT * FROM sms WHERE smsFrom = ?");
-                ps2.setInt(1, model.getBarangayID());
-                rs2 = ps2.executeQuery();
-                while(rs2.next()){
-                    smsModel = new SMSModel();
-                    smsModel.setSMSID(rs2.getInt("smsID"));
-                    smsModel.setSMS(rs2.getString("sms"));
-                    smsModel.setSmsFrom(rs2.getString("smsFrom"));
-                    smsModel.setDateSent(rs2.getDate("dateSent"));
-                    smsList.add(smsModel);
-                }
-                model.setSmsHistory(smsList);
                 list.add(model);
             }
             con.close();
@@ -80,23 +62,10 @@ public class BarangayDAO {
             rs = ps.executeQuery();
             while(rs.next()){
                 model = new BarangayModel();
-                smsList = new LinkedList<>();
                 model.setBarangayID(rs.getInt("barangayID"));
                 model.setBarangayName(rs.getString("barangayName"));
                 model.setBarangayContact(rs.getLong("barangayContact"));
                 
-                ps2 = con.prepareStatement("SELECT * FROM sms WHERE smsFrom = ?");
-                ps2.setInt(1, model.getBarangayID());
-                rs2 = ps2.executeQuery();
-                while(rs2.next()){
-                    smsModel = new SMSModel();
-                    smsModel.setSMSID(rs2.getInt("smsID"));
-                    smsModel.setSMS(rs2.getString("sms"));
-                    smsModel.setSmsFrom(rs2.getString("smsFrom"));
-                    smsModel.setDateSent(rs2.getDate("dateSent"));
-                    smsList.add(smsModel);
-                }
-                model.setSmsHistory(smsList);
                 list.add(model);
             }
             con.close();
@@ -123,7 +92,7 @@ public class BarangayDAO {
         cf = new ConcreteConnection();
         try{
             con = cf.getConnection();
-            ps = con.prepareStatement("SELECT barangayID, barangayName, barangayContact, COUNT(*) AS patientCount FROM admittance a, ref_barangay rb, patient p WHERE a.patientBarangay = rb.barangayID and a.admittanceID = p.patientID and p.dateDischarged IS NULL GROUP BY patientBarangay");
+            ps = con.prepareStatement("SELECT barangayID, barangayName, barangayContact, COUNT(*) AS patientCount FROM admittance a, ref_barangay rb, patient p WHERE a.patientBarangay = rb.barangayID and a.admittanceID = p.patientID GROUP BY patientBarangay");
             rs = ps.executeQuery();
             while(rs.next()){
                 model = new BarangayModel();

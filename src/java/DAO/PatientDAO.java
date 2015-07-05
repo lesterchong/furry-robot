@@ -107,7 +107,6 @@ public class PatientDAO {
                 model.setAllergies(rs.getString("knownAllergies"));
                 model.setAssignedNurse(rs.getString("staffLastName") + ", " + rs.getString("staffFirstName"));
                 model.setDateAdmitted(rs.getDate("dateFiled"));
-                model.setDateDischarged(rs.getDate("dateDischarged"));
 
                 //Procedures
                 procedureModel.setMcv(rs.getBoolean("mcv"));
@@ -272,7 +271,6 @@ public class PatientDAO {
                 model.setEmergencyCompanion(rs.getString("companionLastName") + ", " + rs.getString("companionFirstName"));
                 model.setAssignedNurse(rs.getString("staffLastName") + ", " + rs.getString("staffFirstName"));
                 model.setDateAdmitted(rs.getDate("dateFiled"));
-                model.setDateDischarged(rs.getDate("dateDischarged"));
 
                 //Procedures
                 procedureModel.setMcv(rs.getBoolean("mcv"));
@@ -405,7 +403,7 @@ public class PatientDAO {
 
         try {
             con = cf.getConnection();
-            ps = con.prepareStatement("SELECT * FROM admittance a, patient p, ref_ward rw, ref_diagnosis rd, staff s WHERE a.admittanceID = p.patientID and p.patientWard = rw.wardID and p.patientDiagnosis = rd.diagnosisID and p.staffID = s.staffID and dateDischarged IS NULL and (a.patientFirstName LIKE ? or a.patientLastName LIKE ?)");
+            ps = con.prepareStatement("SELECT * FROM admittance a, patient p, ref_ward rw, ref_diagnosis rd, staff s WHERE a.admittanceID = p.patientID and p.patientWard = rw.wardID and p.patientDiagnosis = rd.diagnosisID and p.staffID = s.staffID and (a.patientFirstName LIKE ? or a.patientLastName LIKE ?)");
             ps.setString(1, search);
             ps.setString(2, search);
             rs = ps.executeQuery();
@@ -428,7 +426,6 @@ public class PatientDAO {
                 model.setEmergencyCompanion(rs.getString("companionLastName") + ", " + rs.getString("companionFirstName"));
                 model.setAssignedNurse(rs.getString("staffLastName") + ", " + rs.getString("staffFirstName"));
                 model.setDateAdmitted(rs.getDate("dateFiled"));
-                model.setDateDischarged(rs.getDate("dateDischarged"));
 
                 //Procedures
                 procedureModel.setMcv(rs.getBoolean("mcv"));
@@ -579,7 +576,7 @@ public class PatientDAO {
 
         try {
             con = cf.getConnection();
-            ps = con.prepareStatement("SELECT * FROM admittance a, patient p, ref_ward rw, ref_diagnosis rd, staff s WHERE a.admittanceID = p.patientID and p.patientWard = rw.wardID and p.patientDiagnosis = rd.diagnosisID and p.staffID = s.staffID and dateDischarged IS NULL ORDER BY dateFiled LIMIT 5");
+            ps = con.prepareStatement("SELECT * FROM admittance a, patient p, ref_ward rw, ref_diagnosis rd, staff s WHERE a.admittanceID = p.patientID and p.patientWard = rw.wardID and p.patientDiagnosis = rd.diagnosisID and p.staffID = s.staffID ORDER BY dateFiled DESC LIMIT 5");
             rs = ps.executeQuery();
             while (rs.next()) {
                 model = new PatientModel();
@@ -597,7 +594,6 @@ public class PatientDAO {
                 model.setEmergencyCompanion(rs.getString("companionLastName") + ", " + rs.getString("companionFirstName"));
                 model.setAssignedNurse(rs.getString("staffLastName") + ", " + rs.getString("staffFirstName"));
                 model.setDateAdmitted(rs.getDate("dateFiled"));
-                model.setDateDischarged(rs.getDate("dateDischarged"));
 
                 //Procedures
                 procedureModel.setMcv(rs.getBoolean("mcv"));
@@ -662,7 +658,7 @@ public class PatientDAO {
 
         try {
             con = cf.getConnection();
-            ps = con.prepareStatement("SELECT * FROM admittance a, patient p, ref_ward rw, ref_diagnosis rd, staff s WHERE a.admittanceID = p.patientID and p.patientWard = rw.wardID and p.patientDiagnosis = rd.diagnosisID and p.staffID = s.staffID and dateDischarged IS NOT NULL ORDER BY dateDischarged LIMIT 5");
+            ps = con.prepareStatement("SELECT * FROM admittance a, discharged_patients p, ref_ward rw, ref_diagnosis rd, staff s WHERE a.admittanceID = p.patientID and p.patientWard = rw.wardID and p.patientDiagnosis = rd.diagnosisID and p.staffID = s.staffID ORDER BY dateDischarged LIMIT 5");
             rs = ps.executeQuery();
             while (rs.next()) {
                 model = new PatientModel();
@@ -732,98 +728,14 @@ public class PatientDAO {
         }
         return list;
     }
-
-    public LinkedList<PatientModel> getUndischargedPatients() {
-        LinkedList<PatientModel> list = new LinkedList<>();
-        VitalsModel vsModel;
-        SymptomModel symptomModel;
-        PatientModel model;
-        ProcedureModel procedureModel;
-
+  
+    public boolean deletePatient(PatientModel model) {
         cf = new ConcreteConnection();
 
         try {
             con = cf.getConnection();
-            ps = con.prepareStatement("SELECT * FROM admittance a, patient p, ref_ward rw, ref_diagnosis rd, staff s WHERE a.admittanceID = p.patientID and p.patientWard = rw.wardID and p.patientDiagnosis = rd.diagnosisID and p.staffID = s.staffID and dateDischarged is null");
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                model = new PatientModel();
-                vsModel = new VitalsModel();
-                symptomModel = new SymptomModel();
-                procedureModel = new ProcedureModel();
-
-                model.setPatientID(rs.getInt("patientID"));
-                model.setPatientFirstName(rs.getString("patientFirstName"));
-                model.setPatientLastName(rs.getString("patientLastName"));
-                model.setPatientDiagnosis(rs.getString("diagnosisName"));
-                model.setPatientWard(rs.getString("wardName"));
-                model.setAllergies(rs.getString("knownAllergies"));
-                model.setEmegergencyContact(rs.getLong("companionPhoneNumber"));
-                model.setEmergencyCompanion(rs.getString("companionLastName") + ", " + rs.getString("companionFirstName"));
-                model.setAssignedNurse(rs.getString("staffLastName") + ", " + rs.getString("staffFirstName"));
-                model.setDateAdmitted(rs.getDate("dateFiled"));
-                model.setDateDischarged(rs.getDate("dateDischarged"));
-
-                //Procedures
-                procedureModel.setMcv(rs.getBoolean("mcv"));
-                procedureModel.setMchb(rs.getBoolean("mchb"));
-                procedureModel.setHemocrit(rs.getBoolean("hemocrit"));
-                procedureModel.setRbc(rs.getBoolean("rbc"));
-                procedureModel.setDifferential(rs.getBoolean("differential"));
-                procedureModel.setRbcdw(rs.getBoolean("rbcdw"));
-                procedureModel.setChloride(rs.getBoolean("chloride"));
-                procedureModel.setUrea(rs.getBoolean("urea"));
-                procedureModel.setCreatine(rs.getBoolean("creatine"));
-                procedureModel.setPacked(rs.getBoolean("packed"));
-                procedureModel.setSodium(rs.getBoolean("sodium"));
-                procedureModel.setPotassium(rs.getBoolean("potassium"));
-                procedureModel.setBicarbonate(rs.getBoolean("bicarbonate"));
-                procedureModel.setCreatinine(rs.getBoolean("creatinine"));
-                procedureModel.setEsr(rs.getBoolean("esr"));
-                procedureModel.setHemoglobin(rs.getBoolean("hemoglobin"));
-                procedureModel.setPlatelet(rs.getBoolean("platelet"));
-                procedureModel.setWbc(rs.getBoolean("wbc"));
-                procedureModel.setAlt(rs.getBoolean("alt"));
-                procedureModel.setAst(rs.getBoolean("ast"));
-                procedureModel.setTourniquet(rs.getBoolean("tourniquet"));
-                procedureModel.setCbc(rs.getBoolean("cbc"));
-                procedureModel.setDateTaken(rs.getDate("dateTaken2"));
-                model.setPatientProcedure(procedureModel);
-
-                //Vital Signs
-                vsModel.setDateTaken(rs.getDate("dateTaken"));
-                vsModel.setTemperature(rs.getFloat("temperature"));
-                vsModel.setLastDextrose(rs.getDate("lastDextrose"));
-                vsModel.setBloodPressure(rs.getString("bloodPressure"));
-                model.setPatientVitals(vsModel);
-
-                //Symptoms
-                symptomModel.setAbdominalPain(rs.getBoolean("abdominalPain"));
-                symptomModel.setAscites(rs.getBoolean("ascites"));
-                symptomModel.setHypotension(rs.getBoolean("hypotension"));
-                symptomModel.setJaundice(rs.getString("jaundice"));
-                symptomModel.setLiver(rs.getFloat("liver"));
-                symptomModel.setPleuralEffusion(rs.getBoolean("pleuralEffusion"));
-                symptomModel.setSpleen(rs.getFloat("spleen"));
-                symptomModel.setDateTaken(rs.getDate("dateTaken3"));
-                model.setPatientSymptoms(symptomModel);
-
-                list.add(model);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    public boolean dischargePatient(PatientModel model) {
-        cf = new ConcreteConnection();
-
-        try {
-            con = cf.getConnection();
-            ps = con.prepareStatement("UPDATE patient SET dateDischarged = ? WHERE patientID = ?");
-            ps.setDate(1, model.getDateDischarged());
-            ps.setInt(2, model.getPatientID());
+            ps = con.prepareStatement("DELETE FROM patient WHERE patientID = ?");
+            ps.setInt(1, model.getPatientID());
             ps.executeUpdate();
             con.close();
             return true;
@@ -948,7 +860,7 @@ public class PatientDAO {
 
         try {
             con = cf.getConnection();
-            ps = con.prepareStatement("SELECT * FROM admittance a, patient p, ref_ward rw, ref_diagnosis rd, staff s, ref_barangay rb WHERE a.admittanceID = p.patientID and p.patientWard = rw.wardID and p.patientDiagnosis = rd.diagnosisID and p.staffID = s.staffID and a.patientBarangay = rb.barangayID and a.incidentBarangay = rb.barangayID and dateDischarged IS NOT NULL");
+            ps = con.prepareStatement("SELECT * FROM admittance a, discharged_patients p, ref_ward rw, ref_diagnosis rd, staff s, ref_barangay rb WHERE a.admittanceID = p.patientID and p.patientWard = rw.wardID and p.patientDiagnosis = rd.diagnosisID and p.staffID = s.staffID and a.patientBarangay = rb.barangayID and a.incidentBarangay = rb.barangayID");
             rs = ps.executeQuery();
             while (rs.next()) {
                 model = new PatientModel();
@@ -1057,5 +969,516 @@ public class PatientDAO {
             e.printStackTrace();
         }
         return false;
+    }
+    
+    public boolean transferPatientToHistory(PatientModel model){
+        cf = new ConcreteConnection();
+        
+        try{
+            con = cf.getConnection();
+            ps = con.prepareStatement("INSERT INTO discharged_patients VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            ps.setInt(1, model.getPatientID());
+            ps.setInt(2, Integer.parseInt(model.getPatientDiagnosis()));
+            ps.setInt(3, Integer.parseInt(model.getPatientWard()));
+            ps.setDate(4, model.getDateDischarged());
+            ps.setDate(5, model.getPatientVitals().getDateTaken());
+            ps.setFloat(6, model.getPatientVitals().getTemperature());
+            ps.setString(7, model.getPatientVitals().getBloodPressure());
+            ps.setDate(8, model.getPatientVitals().getLastDextrose());
+            ps.setBoolean(9, model.getPatientSymptoms().isAbdominalPain());
+            ps.setBoolean(10, model.getPatientSymptoms().isPleuralEffusion());
+            ps.setBoolean(11, model.getPatientSymptoms().isAscites());
+            ps.setBoolean(12, model.getPatientSymptoms().isHypotension());
+            ps.setString(13, model.getPatientSymptoms().getJaundice());
+            ps.setFloat(14, model.getPatientSymptoms().getLiver());
+            ps.setFloat(15, model.getPatientSymptoms().getSpleen());
+            ps.setInt(16, Integer.parseInt(model.getAssignedNurse()));
+            ps.setDate(17, model.getPatientProcedure().getDateTaken());
+            ps.setDate(18, model.getPatientSymptoms().getDateTaken());
+            ps.setBoolean(19, model.getPatientProcedure().isHemocrit());
+            ps.setBoolean(20, model.getPatientProcedure().isDifferential());
+            ps.setBoolean(21, model.getPatientProcedure().isRbcdw());
+            ps.setBoolean(22, model.getPatientProcedure().isHemoglobin());
+            ps.setBoolean(23, model.getPatientProcedure().isPlatelet());
+            ps.setBoolean(24, model.getPatientProcedure().isWbc());
+            ps.setBoolean(25, model.getPatientProcedure().isChloride());
+            ps.setBoolean(26, model.getPatientProcedure().isUrea());
+            ps.setBoolean(27, model.getPatientProcedure().isMcv());
+            ps.setBoolean(28, model.getPatientProcedure().isPacked());
+            ps.setBoolean(29, model.getPatientProcedure().isSodium());
+            ps.setBoolean(30, model.getPatientProcedure().isPotassium());
+            ps.setBoolean(31, model.getPatientProcedure().isBicarbonate());
+            ps.setBoolean(32, model.getPatientProcedure().isCreatinine());
+            ps.setBoolean(33, model.getPatientProcedure().isEsr());
+            ps.setBoolean(34, model.getPatientProcedure().isAst());
+            ps.setBoolean(35, model.getPatientProcedure().isAlt());
+            ps.setBoolean(36, model.getPatientProcedure().isTourniquet());
+            ps.setBoolean(37, model.getPatientProcedure().isCbc());
+            ps.setBoolean(38, model.getPatientProcedure().isMchb());
+            ps.setBoolean(39, model.getPatientProcedure().isRbc());
+            ps.setBoolean(40, model.getPatientProcedure().isCreatine());
+            ps.executeUpdate();
+            con.close();
+            return true;
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public PatientModel getPatientRawDataByID(int id){
+        VitalsModel vsModel;
+        SymptomModel symptomModel;
+        ProcedureModel procedureModel;
+        PatientModel model = null;
+
+        cf = new ConcreteConnection();
+
+        try{
+            con = cf.getConnection();
+            ps = con.prepareStatement("SELECT * FROM admittance a, patient p WHERE a.admittanceID = p.patientID and p.patientID=?");
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                model = new PatientModel();
+                vsModel = new VitalsModel();
+                symptomModel = new SymptomModel();
+                procedureModel = new ProcedureModel();
+
+                //Patient Info and Procedures
+                model.setPatientID(rs.getInt("patientID"));
+                model.setPatientFirstName(rs.getString("patientFirstName"));
+                model.setPatientLastName(rs.getString("patientLastName"));
+                model.setPatientDiagnosis(rs.getString("patientDiagnosis"));
+                model.setPatientWard(rs.getString("patientWard"));
+                model.setEmegergencyContact(rs.getLong("companionPhoneNumber"));
+                model.setEmergencyCompanion(rs.getString("companionLastName") + ", " + rs.getString("companionFirstName"));
+                model.setAllergies(rs.getString("knownAllergies"));
+                model.setAssignedNurse(String.valueOf(rs.getInt("staffID")));
+                model.setDateAdmitted(rs.getDate("dateFiled"));
+
+                //Procedures
+                procedureModel.setMcv(rs.getBoolean("mcv"));
+                procedureModel.setMchb(rs.getBoolean("mchb"));
+                procedureModel.setHemocrit(rs.getBoolean("hemocrit"));
+                procedureModel.setRbc(rs.getBoolean("rbc"));
+                procedureModel.setDifferential(rs.getBoolean("differential"));
+                procedureModel.setRbcdw(rs.getBoolean("rbcdw"));
+                procedureModel.setChloride(rs.getBoolean("chloride"));
+                procedureModel.setUrea(rs.getBoolean("urea"));
+                procedureModel.setCreatine(rs.getBoolean("creatine"));
+                procedureModel.setPacked(rs.getBoolean("packed"));
+                procedureModel.setSodium(rs.getBoolean("sodium"));
+                procedureModel.setPotassium(rs.getBoolean("potassium"));
+                procedureModel.setBicarbonate(rs.getBoolean("bicarbonate"));
+                procedureModel.setCreatinine(rs.getBoolean("creatinine"));
+                procedureModel.setEsr(rs.getBoolean("esr"));
+                procedureModel.setHemoglobin(rs.getBoolean("hemoglobin"));
+                procedureModel.setPlatelet(rs.getBoolean("platelet"));
+                procedureModel.setWbc(rs.getBoolean("wbc"));
+                procedureModel.setAlt(rs.getBoolean("alt"));
+                procedureModel.setAst(rs.getBoolean("ast"));
+                procedureModel.setTourniquet(rs.getBoolean("tourniquet"));
+                procedureModel.setCbc(rs.getBoolean("cbc"));
+                procedureModel.setDateTaken(rs.getDate("dateTaken2"));
+                model.setPatientProcedure(procedureModel);
+
+                //Vital Signs
+                vsModel.setDateTaken(rs.getDate("dateTaken"));
+                vsModel.setTemperature(rs.getFloat("temperature"));
+                vsModel.setLastDextrose(rs.getDate("lastDextrose"));
+                vsModel.setBloodPressure(rs.getString("bloodPressure"));
+                model.setPatientVitals(vsModel);
+
+                //Symptoms
+                symptomModel.setAbdominalPain(rs.getBoolean("abdominalPain"));
+                symptomModel.setAscites(rs.getBoolean("ascites"));
+                symptomModel.setHypotension(rs.getBoolean("hypotension"));
+                symptomModel.setJaundice(rs.getString("jaundice"));
+                symptomModel.setLiver(rs.getFloat("liver"));
+                symptomModel.setPleuralEffusion(rs.getBoolean("pleuralEffusion"));
+                symptomModel.setSpleen(rs.getFloat("spleen"));
+                symptomModel.setDateTaken(rs.getDate("dateTaken3"));
+                model.setPatientSymptoms(symptomModel);
+            }
+            con.close();
+            }catch(SQLException e){
+                    e.printStackTrace();
+            }
+        return model;
+        }
+    
+    public LinkedList<PatientModel> getPatientsWithDengue(){
+        LinkedList<PatientModel> list = new LinkedList<>();
+        LinkedList<VitalsModel> vsList;
+        LinkedList<SymptomModel> symptomList;
+        LinkedList<ProcedureModel> procedureList;
+        VitalsModel vsModel;
+        SymptomModel symptomModel;
+        ProcedureModel procedureModel;
+        PatientModel model;
+        PreparedStatement ps2;
+        ResultSet rs2;
+
+        cf = new ConcreteConnection();
+
+        try {
+            con = cf.getConnection();
+            ps = con.prepareStatement("SELECT * FROM admittance a, patient p, ref_ward rw, ref_diagnosis rd, staff s WHERE a.admittanceID = p.patientID and p.patientWard = rw.wardID and p.patientDiagnosis = rd.diagnosisID and p.staffID = s.staffID and p.patientDiagnosis != 0");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                model = new PatientModel();
+                vsList = new LinkedList<>();
+                symptomList = new LinkedList<>();
+                procedureList = new LinkedList<>();
+                vsModel = new VitalsModel();
+                symptomModel = new SymptomModel();
+                procedureModel = new ProcedureModel();
+
+                //Patient Info and Procedures
+                model.setPatientID(rs.getInt("patientID"));
+                model.setPatientFirstName(rs.getString("patientFirstName"));
+                model.setPatientLastName(rs.getString("patientLastName"));
+                model.setPatientDiagnosis(rs.getString("diagnosisName"));
+                model.setPatientWard(rs.getString("wardName"));
+                model.setEmegergencyContact(rs.getLong("companionPhoneNumber"));
+                model.setEmergencyCompanion(rs.getString("companionLastName") + ", " + rs.getString("companionFirstName"));
+                model.setAllergies(rs.getString("knownAllergies"));
+                model.setAssignedNurse(rs.getString("staffLastName") + ", " + rs.getString("staffFirstName"));
+                model.setDateAdmitted(rs.getDate("dateFiled"));
+
+                //Procedures
+                procedureModel.setMcv(rs.getBoolean("mcv"));
+                procedureModel.setMchb(rs.getBoolean("mchb"));
+                procedureModel.setHemocrit(rs.getBoolean("hemocrit"));
+                procedureModel.setRbc(rs.getBoolean("rbc"));
+                procedureModel.setDifferential(rs.getBoolean("differential"));
+                procedureModel.setRbcdw(rs.getBoolean("rbcdw"));
+                procedureModel.setChloride(rs.getBoolean("chloride"));
+                procedureModel.setUrea(rs.getBoolean("urea"));
+                procedureModel.setCreatine(rs.getBoolean("creatine"));
+                procedureModel.setPacked(rs.getBoolean("packed"));
+                procedureModel.setSodium(rs.getBoolean("sodium"));
+                procedureModel.setPotassium(rs.getBoolean("potassium"));
+                procedureModel.setBicarbonate(rs.getBoolean("bicarbonate"));
+                procedureModel.setCreatinine(rs.getBoolean("creatinine"));
+                procedureModel.setEsr(rs.getBoolean("esr"));
+                procedureModel.setHemoglobin(rs.getBoolean("hemoglobin"));
+                procedureModel.setPlatelet(rs.getBoolean("platelet"));
+                procedureModel.setWbc(rs.getBoolean("wbc"));
+                procedureModel.setAlt(rs.getBoolean("alt"));
+                procedureModel.setAst(rs.getBoolean("ast"));
+                procedureModel.setTourniquet(rs.getBoolean("tourniquet"));
+                procedureModel.setCbc(rs.getBoolean("cbc"));
+                procedureModel.setDateTaken(rs.getDate("dateTaken2"));
+                model.setPatientProcedure(procedureModel);
+
+                //Vital Signs
+                vsModel.setDateTaken(rs.getDate("dateTaken"));
+                vsModel.setTemperature(rs.getFloat("temperature"));
+                vsModel.setLastDextrose(rs.getDate("lastDextrose"));
+                vsModel.setBloodPressure(rs.getString("bloodPressure"));
+                model.setPatientVitals(vsModel);
+
+                //Symptoms
+                symptomModel.setAbdominalPain(rs.getBoolean("abdominalPain"));
+                symptomModel.setAscites(rs.getBoolean("ascites"));
+                symptomModel.setHypotension(rs.getBoolean("hypotension"));
+                symptomModel.setJaundice(rs.getString("jaundice"));
+                symptomModel.setLiver(rs.getFloat("liver"));
+                symptomModel.setPleuralEffusion(rs.getBoolean("pleuralEffusion"));
+                symptomModel.setSpleen(rs.getFloat("spleen"));
+                symptomModel.setDateTaken(rs.getDate("dateTaken3"));
+                model.setPatientSymptoms(symptomModel);
+
+                ps2 = con.prepareStatement("SELECT * FROM history_vitals vs WHERE patientID = ?");
+                ps2.setInt(1, model.getPatientID());
+                rs2 = ps2.executeQuery();
+                while (rs2.next()) {
+                    vsModel = new VitalsModel();
+                    vsModel.setVitalsID(rs2.getInt("vitalsID"));
+                    vsModel.setBloodPressure(rs2.getString("bloodPressure"));
+                    vsModel.setTemperature(rs2.getFloat("temperature"));
+                    vsModel.setLastDextrose(rs2.getDate("lastDextrose"));
+                    vsModel.setDateTaken(rs2.getDate("dateTaken"));
+                    vsList.add(vsModel);
+                }
+                model.setHistoryVitals(vsList);
+
+                ps2 = con.prepareStatement("SELECT * FROM history_symptom WHERE patientID = ?");
+                ps2.setInt(1, model.getPatientID());
+                rs2 = ps2.executeQuery();
+                while (rs2.next()) {
+                    symptomModel = new SymptomModel();
+                    symptomModel.setSymptomID(rs2.getInt("symptomID"));
+                    symptomModel.setAbdominalPain(rs2.getBoolean("abdominalPain"));
+                    symptomModel.setAscites(rs2.getBoolean("ascites"));
+                    symptomModel.setHypotension(rs2.getBoolean("hypotension"));
+                    symptomModel.setJaundice(rs2.getString("jaundice"));
+                    symptomModel.setLiver(rs2.getFloat("liver"));
+                    symptomModel.setPleuralEffusion(rs2.getBoolean("pleuralEffusion"));
+                    symptomModel.setSpleen(rs2.getFloat("spleen"));
+                    symptomModel.setDateTaken(rs2.getDate("dateTaken"));
+                    symptomList.add(symptomModel);
+                }
+                model.setHistorySymptoms(symptomList);
+
+                ps2 = con.prepareStatement("SELECT * FROM history_procedure WHERE patientID = ?");
+                ps2.setInt(1, model.getPatientID());
+                rs2 = ps2.executeQuery();
+                while (rs2.next()) {
+                    procedureModel = new ProcedureModel();
+                    procedureModel.setMcv(rs.getBoolean("mcv"));
+                    procedureModel.setMchb(rs.getBoolean("mchb"));
+                    procedureModel.setHemocrit(rs.getBoolean("hemocrit"));
+                    procedureModel.setRbc(rs.getBoolean("rbc"));
+                    procedureModel.setDifferential(rs.getBoolean("differential"));
+                    procedureModel.setRbcdw(rs.getBoolean("rbcdw"));
+                    procedureModel.setChloride(rs.getBoolean("chloride"));
+                    procedureModel.setUrea(rs.getBoolean("urea"));
+                    procedureModel.setCreatine(rs.getBoolean("creatine"));
+                    procedureModel.setPacked(rs.getBoolean("packed"));
+                    procedureModel.setSodium(rs.getBoolean("sodium"));
+                    procedureModel.setPotassium(rs.getBoolean("potassium"));
+                    procedureModel.setBicarbonate(rs.getBoolean("bicarbonate"));
+                    procedureModel.setCreatinine(rs.getBoolean("creatinine"));
+                    procedureModel.setEsr(rs.getBoolean("esr"));
+                    procedureModel.setHemoglobin(rs.getBoolean("hemoglobin"));
+                    procedureModel.setPlatelet(rs.getBoolean("platelet"));
+                    procedureModel.setWbc(rs.getBoolean("wbc"));
+                    procedureModel.setAlt(rs.getBoolean("alt"));
+                    procedureModel.setAst(rs.getBoolean("ast"));
+                    procedureModel.setTourniquet(rs.getBoolean("tourniquet"));
+                    procedureModel.setCbc(rs.getBoolean("cbc"));
+                    procedureModel.setDateTaken(rs.getDate("dateTaken"));
+                    procedureList.add(procedureModel);
+                }
+                model.setHistoryProcedure(procedureList);
+                list.add(model);
+            }
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    public LinkedList<PatientModel> getPatientsWithLepto(){
+        LinkedList<PatientModel> list = new LinkedList<>();
+        LinkedList<VitalsModel> vsList;
+        LinkedList<SymptomModel> symptomList;
+        LinkedList<ProcedureModel> procedureList;
+        VitalsModel vsModel;
+        SymptomModel symptomModel;
+        ProcedureModel procedureModel;
+        PatientModel model;
+        PreparedStatement ps2;
+        ResultSet rs2;
+
+        cf = new ConcreteConnection();
+
+        try {
+            con = cf.getConnection();
+            ps = con.prepareStatement("SELECT * FROM admittance a, patient p, ref_ward rw, ref_diagnosis rd, staff s WHERE a.admittanceID = p.patientID and p.patientWard = rw.wardID and p.patientDiagnosis = rd.diagnosisID and p.staffID = s.staffID and p.patientDiagnosis = 0");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                model = new PatientModel();
+                vsList = new LinkedList<>();
+                symptomList = new LinkedList<>();
+                procedureList = new LinkedList<>();
+                vsModel = new VitalsModel();
+                symptomModel = new SymptomModel();
+                procedureModel = new ProcedureModel();
+
+                //Patient Info and Procedures
+                model.setPatientID(rs.getInt("patientID"));
+                model.setPatientFirstName(rs.getString("patientFirstName"));
+                model.setPatientLastName(rs.getString("patientLastName"));
+                model.setPatientDiagnosis(rs.getString("diagnosisName"));
+                model.setPatientWard(rs.getString("wardName"));
+                model.setEmegergencyContact(rs.getLong("companionPhoneNumber"));
+                model.setEmergencyCompanion(rs.getString("companionLastName") + ", " + rs.getString("companionFirstName"));
+                model.setAllergies(rs.getString("knownAllergies"));
+                model.setAssignedNurse(rs.getString("staffLastName") + ", " + rs.getString("staffFirstName"));
+                model.setDateAdmitted(rs.getDate("dateFiled"));
+
+                //Procedures
+                procedureModel.setMcv(rs.getBoolean("mcv"));
+                procedureModel.setMchb(rs.getBoolean("mchb"));
+                procedureModel.setHemocrit(rs.getBoolean("hemocrit"));
+                procedureModel.setRbc(rs.getBoolean("rbc"));
+                procedureModel.setDifferential(rs.getBoolean("differential"));
+                procedureModel.setRbcdw(rs.getBoolean("rbcdw"));
+                procedureModel.setChloride(rs.getBoolean("chloride"));
+                procedureModel.setUrea(rs.getBoolean("urea"));
+                procedureModel.setCreatine(rs.getBoolean("creatine"));
+                procedureModel.setPacked(rs.getBoolean("packed"));
+                procedureModel.setSodium(rs.getBoolean("sodium"));
+                procedureModel.setPotassium(rs.getBoolean("potassium"));
+                procedureModel.setBicarbonate(rs.getBoolean("bicarbonate"));
+                procedureModel.setCreatinine(rs.getBoolean("creatinine"));
+                procedureModel.setEsr(rs.getBoolean("esr"));
+                procedureModel.setHemoglobin(rs.getBoolean("hemoglobin"));
+                procedureModel.setPlatelet(rs.getBoolean("platelet"));
+                procedureModel.setWbc(rs.getBoolean("wbc"));
+                procedureModel.setAlt(rs.getBoolean("alt"));
+                procedureModel.setAst(rs.getBoolean("ast"));
+                procedureModel.setTourniquet(rs.getBoolean("tourniquet"));
+                procedureModel.setCbc(rs.getBoolean("cbc"));
+                procedureModel.setDateTaken(rs.getDate("dateTaken2"));
+                model.setPatientProcedure(procedureModel);
+
+                //Vital Signs
+                vsModel.setDateTaken(rs.getDate("dateTaken"));
+                vsModel.setTemperature(rs.getFloat("temperature"));
+                vsModel.setLastDextrose(rs.getDate("lastDextrose"));
+                vsModel.setBloodPressure(rs.getString("bloodPressure"));
+                model.setPatientVitals(vsModel);
+
+                //Symptoms
+                symptomModel.setAbdominalPain(rs.getBoolean("abdominalPain"));
+                symptomModel.setAscites(rs.getBoolean("ascites"));
+                symptomModel.setHypotension(rs.getBoolean("hypotension"));
+                symptomModel.setJaundice(rs.getString("jaundice"));
+                symptomModel.setLiver(rs.getFloat("liver"));
+                symptomModel.setPleuralEffusion(rs.getBoolean("pleuralEffusion"));
+                symptomModel.setSpleen(rs.getFloat("spleen"));
+                symptomModel.setDateTaken(rs.getDate("dateTaken3"));
+                model.setPatientSymptoms(symptomModel);
+
+                ps2 = con.prepareStatement("SELECT * FROM history_vitals vs WHERE patientID = ?");
+                ps2.setInt(1, model.getPatientID());
+                rs2 = ps2.executeQuery();
+                while (rs2.next()) {
+                    vsModel = new VitalsModel();
+                    vsModel.setVitalsID(rs2.getInt("vitalsID"));
+                    vsModel.setBloodPressure(rs2.getString("bloodPressure"));
+                    vsModel.setTemperature(rs2.getFloat("temperature"));
+                    vsModel.setLastDextrose(rs2.getDate("lastDextrose"));
+                    vsModel.setDateTaken(rs2.getDate("dateTaken"));
+                    vsList.add(vsModel);
+                }
+                model.setHistoryVitals(vsList);
+
+                ps2 = con.prepareStatement("SELECT * FROM history_symptom WHERE patientID = ?");
+                ps2.setInt(1, model.getPatientID());
+                rs2 = ps2.executeQuery();
+                while (rs2.next()) {
+                    symptomModel = new SymptomModel();
+                    symptomModel.setSymptomID(rs2.getInt("symptomID"));
+                    symptomModel.setAbdominalPain(rs2.getBoolean("abdominalPain"));
+                    symptomModel.setAscites(rs2.getBoolean("ascites"));
+                    symptomModel.setHypotension(rs2.getBoolean("hypotension"));
+                    symptomModel.setJaundice(rs2.getString("jaundice"));
+                    symptomModel.setLiver(rs2.getFloat("liver"));
+                    symptomModel.setPleuralEffusion(rs2.getBoolean("pleuralEffusion"));
+                    symptomModel.setSpleen(rs2.getFloat("spleen"));
+                    symptomModel.setDateTaken(rs2.getDate("dateTaken"));
+                    symptomList.add(symptomModel);
+                }
+                model.setHistorySymptoms(symptomList);
+
+                ps2 = con.prepareStatement("SELECT * FROM history_procedure WHERE patientID = ?");
+                ps2.setInt(1, model.getPatientID());
+                rs2 = ps2.executeQuery();
+                while (rs2.next()) {
+                    procedureModel = new ProcedureModel();
+                    procedureModel.setMcv(rs.getBoolean("mcv"));
+                    procedureModel.setMchb(rs.getBoolean("mchb"));
+                    procedureModel.setHemocrit(rs.getBoolean("hemocrit"));
+                    procedureModel.setRbc(rs.getBoolean("rbc"));
+                    procedureModel.setDifferential(rs.getBoolean("differential"));
+                    procedureModel.setRbcdw(rs.getBoolean("rbcdw"));
+                    procedureModel.setChloride(rs.getBoolean("chloride"));
+                    procedureModel.setUrea(rs.getBoolean("urea"));
+                    procedureModel.setCreatine(rs.getBoolean("creatine"));
+                    procedureModel.setPacked(rs.getBoolean("packed"));
+                    procedureModel.setSodium(rs.getBoolean("sodium"));
+                    procedureModel.setPotassium(rs.getBoolean("potassium"));
+                    procedureModel.setBicarbonate(rs.getBoolean("bicarbonate"));
+                    procedureModel.setCreatinine(rs.getBoolean("creatinine"));
+                    procedureModel.setEsr(rs.getBoolean("esr"));
+                    procedureModel.setHemoglobin(rs.getBoolean("hemoglobin"));
+                    procedureModel.setPlatelet(rs.getBoolean("platelet"));
+                    procedureModel.setWbc(rs.getBoolean("wbc"));
+                    procedureModel.setAlt(rs.getBoolean("alt"));
+                    procedureModel.setAst(rs.getBoolean("ast"));
+                    procedureModel.setTourniquet(rs.getBoolean("tourniquet"));
+                    procedureModel.setCbc(rs.getBoolean("cbc"));
+                    procedureModel.setDateTaken(rs.getDate("dateTaken"));
+                    procedureList.add(procedureModel);
+                }
+                model.setHistoryProcedure(procedureList);
+                list.add(model);
+            }
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    public boolean addToPendingTransfer(PatientModel model){
+        cf = new ConcreteConnection();
+        
+        try{
+            con = cf.getConnection();
+            ps = con.prepareStatement("INSERT INTO pending_transfer VALUES(?)");
+            ps.setInt(1, model.getPatientID());
+            ps.executeUpdate();
+            con.close();
+            return true;
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public boolean deleteFromPendingTransfer(PatientModel model){
+        cf = new ConcreteConnection();
+        
+        try{
+            con = cf.getConnection();
+            ps = con.prepareStatement("DELETE FROM pending_transfer WHERE patientID=?");
+            ps.setInt(1, model.getPatientID());
+            ps.executeUpdate();
+            con.close();
+            return true;
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public LinkedList<PatientModel> getPendingTransferPatients(){
+        cf = new ConcreteConnection();
+        LinkedList<PatientModel> patientList = new LinkedList<>();
+        PatientModel model;
+        
+        try{
+            con = cf.getConnection();
+            ps = con.prepareStatement("SELECT * FROM admittance a, patient p, ref_ward rw, ref_diagnosis rd, staff s, pending_transfer pt WHERE a.admittanceID = p.patientID and p.patientWard = rw.wardID and p.patientDiagnosis = rd.diagnosisID and p.staffID = s.staffID and pt.patientID = p.patientID");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                model = new PatientModel();
+               
+                //Patient Info and Procedures
+                model.setPatientID(rs.getInt("patientID"));
+                model.setPatientFirstName(rs.getString("patientFirstName"));
+                model.setPatientLastName(rs.getString("patientLastName"));
+                model.setPatientDiagnosis(rs.getString("diagnosisName"));
+                model.setPatientWard(rs.getString("wardName"));
+                model.setEmegergencyContact(rs.getLong("companionPhoneNumber"));
+                model.setEmergencyCompanion(rs.getString("companionLastName") + ", " + rs.getString("companionFirstName"));
+                model.setAllergies(rs.getString("knownAllergies"));
+                model.setAssignedNurse(rs.getString("staffLastName") + ", " + rs.getString("staffFirstName"));
+                model.setDateAdmitted(rs.getDate("dateFiled"));
+                
+                patientList.add(model);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return patientList;
     }
 }
