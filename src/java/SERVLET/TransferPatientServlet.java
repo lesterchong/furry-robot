@@ -53,7 +53,7 @@ public class TransferPatientServlet extends HttpServlet {
             
             rd = getServletContext().getRequestDispatcher("/it-main.jsp");
             
-            if(smtpDAO.sendPatient(patientModel, email) && patientDAO.deleteFromPendingTransfer(patientModel)){
+            if(smtpDAO.sendPatient(patientModel, email) && patientDAO.deleteFromPendingTransfer(patientModel) && patientDAO.deletePatient(patientModel)){
                 out.printf("<script>alert(\"Email Sent to "+email+"\")</script>");
                 rd.include(request, response);
                 return;
