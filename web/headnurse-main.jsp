@@ -305,34 +305,6 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="card" data-sr="reset enter bottom move 40px">
-                            <div class="card-content indigo lighten-2">
-                                <span class="card-title">Discharged Patients</span>
-                            </div>
-                            <div class="card-content">
-                                <table class="centered">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Condition</th>
-                                            <th>Ward</th>                                            
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <%
-                                            patientList = pdao.getDischargedPatients();
-                                            for(int ctr=0; ctr<patientList.size(); ctr++){
-                                        %>
-                                        <tr>
-                                            <td><a href="patient-profile.jsp?patient=<%out.print(patientList.get(ctr).getPatientID());%>"><%out.print(patientList.get(ctr).getPatientLastName()+", "+patientList.get(ctr).getPatientFirstName());%></a></td>
-                                            <td><%out.print(patientList.get(ctr).getPatientDiagnosis());%></td>
-                                            <td><%out.print(patientList.get(ctr).getPatientWard());%></td>
-                                        </tr>
-                                        <%}%>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
                     </div>
                     <!-- Right Side -->
                     <div class="col s12 m6">
