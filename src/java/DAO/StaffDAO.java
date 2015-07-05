@@ -9,7 +9,6 @@ package DAO;
 import DB.ConcreteConnection;
 import DB.ConnectionFactory;
 import MODEL.StaffModel;
-import MODEL.TempModel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -51,7 +50,6 @@ public class StaffDAO {
                 staffModel.setShiftStatus(rs.getString("shiftName"));
                 
                 staffModel.setPatients(patientDAO.getPatientsByStaffID(staffModel.getStaffID()));
-                System.out.println(staffModel.getPatients().size());
                 staffModel.setPatientAssigned(staffModel.getPatients().size());
                 list.add(staffModel);
             }
